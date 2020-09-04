@@ -379,7 +379,152 @@ TRpcSaeta* TRpcSaetaF::addRpcSaeta3Planes( ) {
     //cout<<"ENTRIES in addhit "<<Hits->GetEntriesFast()<<endl;
     return RpcSaeta;
 }
+//---------------------------------------------------------------------------------------------------------
+/*	for(Int_t i=0;i<nhits-1;i++) {
+		TRpcHit* hit = (TRpcHit*)fRpcHitHits->At(i);
+		if(!hit) continue;
+		hit->getHit(trbnum, cell,col,row,x,y,z,time,charge);
+		if(trbnum==2) continue;
+		//loop in strict order in order to prevent double counting.
+		for(Int_t j=i+1;j<nhits;j++) {
+		    TRpcHit* hit2 = (TRpcHit*)fRpcHitHits->At(j);
+		    if(!hit2) continue;
+		    hit2->getHit(trbnum2, cell2,col2,row2,x2,y2,z2,time2,charge2);
+		    if(trbnum2==trbnum) continue;
+		    if(trbnum2==2) continue;
+		    Float_t dist = sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)+(z-z2)*(z-z2));
+		    //cout<<time<<" "<<time2<<" "<<dist/300.<<endl;
+		    cout<<nhits<<" "<<trbnum<<" "<<trbnum2<<" "<<time<<" "<<time2<<" "<<dist/300.<<" "<<x<<" "<<x2<<" "<<endl;
+		    if(trbnum==0 && trbnum2==1) {
+			if( fabs(time2-time-dist/300.)>0.9) continue;
+			// Input Saeta
+			SInit = InputSaeta2Planes(x,y,time,z, x2,y2,time2,z2);
+			// Convergence loop
+			for (Int_t k=0;k<maxIter;k++){
+			    A = AVector(SInit, x,y,time,z) + AVector(SInit, x2,y2,time2,z2);
+			    K = KMatrix(SInit, z) + KMatrix(SInit, z2);
+			    mod  = TMath::Sqrt(SInit.E2Norm());
+			    S2Planes = K.Invert()*A;
+			    SInit    = S2Planes;
+			    mod2 = TMath::Sqrt(SInit.E2Norm());
+			    if (TMath::Abs(mod2-mod)<cutMod){break;} // Saeta has converged	
+			}
+			ind = i;
+			ind2 = j;
+		    }
+		    if(trbnum==1 && trbnum2==0) {
+		    	if( fabs(time-time2-dist/300.)>0.9) continue;
+		    	// Input Saeta
+		    	SInit = InputSaeta2Planes(x2,y2,time2,z2, x,y,time,z);
+		    	// Convergence loop
+		    	for (Int_t k=0;k<maxIter;k++){
+				A = AVector(SInit, x2,y2,time2,z2) + AVector(SInit, x,y,time,z);
+				K = KMatrix(SInit, z2) + KMatrix(SInit, z);
+				mod  = TMath::Sqrt(SInit.E2Norm());
+				S2Planes = K.Invert()*A;
+				SInit    = S2Planes;
+				mod2 = TMath::Sqrt(SInit.E2Norm());
+			if (TMath::Abs(mod-mod2)<cutMod){break;} // Saeta has converged	
+		    	}
+			ind  = j;
+			ind2 = i;
+		    }
 
+		    x0 = S2Planes[0][0];
+		    xP = S2Planes[1][0];
+		    xRec = x0+xP*z;
+		    y0 = S2Planes[2][0];
+		    yP = S2Planes[3][0];
+		    yRec = y0+yP*z;
+		    t0 = S2Planes[4][0];
+		    sl = S2Planes[5][0];
+
+		    kv = TMath::Sqrt(1.0+xP*xP+yP*yP);
+
+		    al = xP/kv;
+		    be = yP/kv;
+		    ga = 1./kv;
+
+		    san  = 2; //temporary
+		    chi2 = (x0-xRec)*(x0-xRec)*wx+(y0-yRec)*(y0-yRec)*wy; //temporary
+
+		    TRpcSaeta* fRpcSaeta2Planes = addRpcSaeta2Planes();
+		    fRpcSaeta2Planes->setRpcSaeta2Planes(x0,xP,y0,yP,z, t0,sl, al,be,ga, san,ind,ind2, chi2);
+
+		    evAl += al;
+		    evBe += be;
+		    evGa += ga;
+
+		}
+	}
+
+	gEvent->setRpcSaeta2Planes(fRpcSaeta2Planes); // FIXME: gEvent things
+	gEvent->setRpcHitsCorr(fRpcHitCorr);
+	// calculate incidence and mean vector (event direction)
+	gEvent->setAngles(-100.,-100.,-100.);
+
+	if(fRpcSaeta2Planes->GetEntriesFast()==0) {
+		return 1;
+	}
+
+	Float_t norm = 1./sqrt(evAl*evAl+evBe*evBe+evGa*evGa);
+
+	evAl *= norm;
+	evBe *= norm;
+	evGa *= norm;
+
+	gEvent->setAngles(evAl,evBe,evGa);
+
+	// The formula to calculate the corrected incidence time is:
+	// t0 - (evAl*x+evBe*y)/300.
+	// And then the corrected hit times can be obtained as:
+	Float_t trmin  = 1e5;
+	Float_t trtime = 0.;
+
+	for(Int_t i=0;i<fRpcSaeta2Planes->GetEntriesFast();i++) {
+		TRpcSaeta* RpcSaeta2 = (TRpcSaeta*)fRpcSaeta2Planes->At(i);
+		trtime = RpcSaeta2->getTime()-(evAl*RpcSaeta2->getX0()+evBe*RpcSaeta2->getY0())/300.;
+		if(trtime<trmin) trmin = trtime;
+		RpcSaeta2->setTime(trtime);
+	}
+	for(Int_t i=0;i<fRpcSaeta2Planes->GetEntriesFast();i++) {
+		TRpcSaeta* RpcSaeta2 = (TRpcSaeta*)fRpcSaeta2Planes->At(i);
+		RpcSaeta2->setTime(RpcSaeta2->getTime()-trmin);
+	}
+
+	totalNHitsCorr=0;
+	Float_t thitmin2 = 1e6;
+
+	for(Int_t i=0;i<fRpcHitHits->GetEntriesFast();i++) {
+		TRpcHit* hit = (TRpcHit*)fRpcHitHits->At(i);
+		if(!hit) continue;
+			hit->getHit(trbnum, cell,col,row,x,y,z,time,charge);
+			TRpcHit* fHit = addRpcHit();
+			time -= (evAl*x+evBe*y)/300.;
+			time -= thitmin;
+		if(thitmin2>time) thitmin2 = time;
+			//time -= trmin;
+			fHit->setHit(trbnum, cell, col, row, x, y, z, time, charge);
+	}
+
+	for(Int_t i=0;i<fRpcHitCorr->GetEntriesFast();i++) {
+		TRpcHit* fHit = (TRpcHit*)fRpcHitCorr->At(i);
+		if(!fHit) continue;
+			fHit->getHit(trbnum, cell,col,row,x,y,z,time,charge);
+			time -= thitmin2;
+			//time -= trmin;
+			fHit->setHit(trbnum, cell, col, row, x, y, z, time, charge);
+	}
+	return 1;
+}
+
+TRpcSaeta* TRpcSaetaF::addRpcSaeta2Planes( ) {
+    TClonesArray& RpcSaeta2Planes = *fRpcSaeta2Planes;
+    cout << " " << totalNHits << endl;
+    TRpcSaeta *RpcSaeta = new (RpcSaeta2Planes[totalNHits++]) TRpcSaeta();
+    //cout<<"ENTRIES in addhit "<<Hits->GetEntriesFast()<<endl;
+    return RpcSaeta;
+}*/
 TRpcHit* TRpcSaetaF::addRpcHit( ) {
     TClonesArray& hits = *fRpcHitCorr;
     TRpcHit *rpchit = new (hits[totalNHitsCorr++]) TRpcHit();
