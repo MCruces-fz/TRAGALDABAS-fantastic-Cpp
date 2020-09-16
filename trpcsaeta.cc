@@ -2,7 +2,7 @@
 
 ClassImp(TRpcSaeta)
 
-TRpcSaeta::TRpcSaeta( ) {
+TRpcSaeta::TRpcSaeta( ) {  // We initialize some variables
 	fX    = -1;
 	fXP   = -1;
 	fY    = -1;
@@ -62,7 +62,7 @@ void TRpcSaeta::setRpcSaeta3Planes(Float_t x0,Float_t xP,Float_t y0,Float_t yP,F
 	fXP   = xP;
 	fY    = y0;
 	fYP   = yP;
-	fZ    = 1000.;
+	fZ    = z; // 1000.;
 	fTime = t0;
 	fSlow = sl;
 	fAl   = al;

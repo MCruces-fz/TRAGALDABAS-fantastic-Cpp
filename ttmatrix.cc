@@ -67,26 +67,26 @@ TMatrixF TTMatrix::KMatrix(TMatrixF SIn, Float_t z){
      
 	K[0][0] = wx;
         K[0][1] = wx*z;
-        K[1][0] = K[0][1];
         K[1][1] = wx*z*z+S*S*wt*XP*XP*z*z/(k*k);
         K[1][3] = S*S*wt*XP*YP*z*z/(k*k);
         K[1][4] = S*wt*XP*z/k;
         K[1][5] = S*wt*XP*z*z;
         K[2][2] = wy;
         K[2][3] = wy*z;
-        K[3][1] = K[1][3];
-        K[3][2] = K[2][3];
         K[3][3] = wy*z*z+S*S*wt*YP*YP*z*z/(k*k);
         K[3][4] = S*wt*YP*z/k;
         K[3][5] = S*wt*YP*z*z;
+        K[4][4] = wt;
+        K[5][5] = wt*k*k*z*z;
+        K[4][5] = wt*k*z;
+        K[1][0] = K[0][1];
+        K[3][1] = K[1][3];
+        K[3][2] = K[2][3];
         K[4][1] = K[1][4];
         K[4][3] = K[3][4];
-        K[4][4] = wt;
-        K[4][5] = wt*k*z;
         K[5][1] = K[1][5];
         K[5][3] = K[3][5];
         K[5][4] = K[4][5];
-        K[5][5] = wt*k*k*z*z;
         return K;
 }
 

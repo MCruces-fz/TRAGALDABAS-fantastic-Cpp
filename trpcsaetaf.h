@@ -15,7 +15,7 @@ R__EXTERN Event *gEvent;
 class TRpcSaeta;
 class TClonesArray;
 
-class TRpcSaetaF: public TObject
+class TRpcSaetaF: public TObject  // What is this¿?
 {
 private:
 	TClonesArray  *fRpcHitHits;

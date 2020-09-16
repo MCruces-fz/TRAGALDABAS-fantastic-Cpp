@@ -12,7 +12,7 @@
 // // Distances in mm, time in ns 
 Float_t wx=11.0*sqrt(2), wy=12.0*sqrt(2), wt=0.3;
 
-Double_t vc = 299.792458;
+Double_t vc = 299.8; // mm/ns
 
 //ClassImp(TTMatrix);
 ClassImp(TRpcSaetaF);
@@ -112,7 +112,7 @@ Int_t TRpcSaetaF::execute() {
 	        Float_t dist = sqrt((x-x2)*(x-x2)+(y-y2)*(y-y2)+(z-z2)*(z-z2));
 	        //cout<<time<<" "<<time2<<" "<<dist/300.<<endl;
 	        if(trbnum==0 && trbnum2==1 ) {
-	            if( fabs(time2-time-dist/300.)>0.9) continue;
+	            if( fabs(time2-time-dist/vc)>0.9) continue;
 	            xP = (x2-x)/(z2-z);
 	            yP = (y2-y)/(z2-z);
 	            x0 = x;
@@ -122,7 +122,7 @@ Int_t TRpcSaetaF::execute() {
 	            ind2 = j;
 	        }
 	        if(trbnum==1 && trbnum2==0) {
-	            if( fabs(time-time2-dist/300.)>0.9) continue;
+	            if( fabs(time-time2-dist/vc)>0.9) continue;
 	            xP = (x-x2)/(z-z2);
 	            yP = (y-y2)/(z-z2);
 	            x0 = x2;
@@ -224,7 +224,7 @@ Int_t TRpcSaetaF::execute() {
 						SInit    = S3Planes;
 						mod2 = TMath::Sqrt(SInit.E2Norm());
 						if (TMath::Abs(mod2-mod)<cutMod){break;} // Saeta has converged	
-					}
+					}  //
 					ind  = i;
 					ind2 = j;
 					ind3 = k;
@@ -555,26 +555,26 @@ TMatrixF TRpcSaetaF::KMatrix(TMatrixF SIn, Float_t z){
         Float_t X0=SIn[0][0], XP=SIn[1][0], Y0=SIn[2][0], YP=SIn[3][0], T0=SIn[4][0], S=SIn[5][0], k=TMath::Sqrt(1.0+XP*XP+YP*YP);
         K[0][0] = wx;
         K[0][1] = wx*z;
-        K[1][0] = K[0][1];
         K[1][1] = wx*z*z+S*S*wt*XP*XP*z*z/(k*k);
         K[1][3] = S*S*wt*XP*YP*z*z/(k*k);
         K[1][4] = S*wt*XP*z/k;
         K[1][5] = S*wt*XP*z*z;
         K[2][2] = wy;
         K[2][3] = wy*z;
-        K[3][1] = K[1][3];
-        K[3][2] = K[2][3];
         K[3][3] = wy*z*z+S*S*wt*YP*YP*z*z/(k*k);
         K[3][4] = S*wt*YP*z/k;
         K[3][5] = S*wt*YP*z*z;
-        K[4][1] = K[1][4];
-        K[4][3] = K[3][4];
         K[4][4] = wt;
         K[4][5] = wt*k*z;
+        K[5][5] = wt*k*k*z*z;
+        K[1][0] = K[0][1];
+        K[3][1] = K[1][3];
+        K[3][2] = K[2][3];
+        K[4][1] = K[1][4];
+        K[4][3] = K[3][4];
         K[5][1] = K[1][5];
         K[5][3] = K[3][5];
         K[5][4] = K[4][5];
-        K[5][5] = wt*k*k*z*z;
         return K;
 }
 
