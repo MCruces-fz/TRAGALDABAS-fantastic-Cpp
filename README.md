@@ -19,3 +19,6 @@ Saeta's reconstruction for TRAGALDABAS detector with Kalman filter.
 > - Ordenar las asignacionnes de los valores de las matrices, de tal 
 >forma que arriba estén las expresiones y abajo las copias de los valores 
 >(cuando hay matrices diagonales o con valores repetidos)
+> - Cambiar en trpcsaetaf.cc (linea 15) Double_t vc = 299.792458; por Double_t vc = 299.8; // mm/ns y cambiar 300. por vc en las líneas 115 y 125
+> - Arreglar tabulaciones en los bucles de tunpacker.cc
+
