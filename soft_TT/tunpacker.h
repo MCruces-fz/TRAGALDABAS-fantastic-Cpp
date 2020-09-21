@@ -18,7 +18,7 @@ using namespace std;
 
 enum EDsState {kDsOk=0,kDsEndFile=1,kDsEndData=2,kDsError=3};
 
-class Unpacker: public TObject  // What is this¿?
+class Unpacker: public TObject
 {
 
 public:
@@ -56,8 +56,8 @@ public:
 
  TString fileLookupPar;         //! * name of the file with lookup params
  TString fileHitFinderPar;      //! * name of the file with hit finder params
- TString fileHitFinderParOut;   //! * name of the file with hit finder params
  TString fileTrackFinderPar;    //! * name of the file with track finder params
+ TString fileHitFinderParOut;      //! * name of the file with hit finder params
 
  void setFileLookupPar( TString fileName) {         fileLookupPar      = fileName;}
  void setFileHitFinderPar( TString fileName) {      fileHitFinderPar   = fileName;}

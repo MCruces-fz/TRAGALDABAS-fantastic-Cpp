@@ -1,0 +1,13 @@
+# Created by Octave 3.8.2, Mon Jun 22 01:14:01 2020 CEST <damian@fptrucha.inv.usc.es>
+# name: hd
+# type: matrix
+# rows: 6
+# columns: 2
+ 4375 -620
+ 4561 -372
+ 7181 -124
+ 3692 124
+ 3269 370
+ 0 620
+
+
