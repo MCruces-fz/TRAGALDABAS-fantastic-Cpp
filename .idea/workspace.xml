@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -29,9 +32,10 @@
   <component name="ChangeListManager">
     <list default="true" id="871bcaf4-e384-4da7-a5d3-4e091136daa2" name="Default Changelist" comment="All files of TRAGALDABAS">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soft_TT/tmydict.cc" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/soft_TT/tmydict_rdict.pcm" beforeDir="false" afterPath="$PROJECT_DIR$/soft_TT/tmydict_rdict.pcm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soft_TT/tr18249041152.hld.root.root" beforeDir="false" afterPath="$PROJECT_DIR$/soft_TT/tr18249041152.hld.root.root" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soft_TT/tunpacker.h" beforeDir="false" afterPath="$PROJECT_DIR$/soft_TT/tunpacker.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soft_TT/trpcsaetaf.cc" beforeDir="false" afterPath="$PROJECT_DIR$/soft_TT/trpcsaetaf.cc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,17 +55,24 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="ObjectiveC" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TRISTAN-journey-PT/AiresINP/18350-0000/grdpcles_mcruces.f" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.web.browsers" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -96,7 +107,25 @@
       <workItem from="1600243483331" duration="3000" />
       <workItem from="1600339882527" duration="1141000" />
       <workItem from="1600417399572" duration="3721000" />
-      <workItem from="1600675527193" duration="2338000" />
+      <workItem from="1600675527193" duration="11324000" />
+      <workItem from="1600762034183" duration="7908000" />
+      <workItem from="1600849141956" duration="7501000" />
+      <workItem from="1601288947630" duration="1830000" />
+      <workItem from="1601305663505" duration="782000" />
+      <workItem from="1601455439554" duration="4135000" />
+      <workItem from="1601484941257" duration="41000" />
+      <workItem from="1601996935429" duration="5686000" />
+      <workItem from="1602058181055" duration="391000" />
+      <workItem from="1602080046860" duration="260000" />
+      <workItem from="1602080317587" duration="732000" />
+      <workItem from="1602153874045" duration="991000" />
+      <workItem from="1602166688497" duration="3540000" />
+      <workItem from="1602602177480" duration="1028000" />
+      <workItem from="1602682107448" duration="5203000" />
+      <workItem from="1602749890263" duration="1344000" />
+      <workItem from="1602757044992" duration="3817000" />
+      <workItem from="1603096380949" duration="1222000" />
+      <workItem from="1603112756890" duration="1362000" />
     </task>
     <task id="LOCAL-00001" summary="All files of TRAGALDABAS">
       <created>1599217974718</created>
@@ -128,14 +157,24 @@
     <option name="LAST_COMMIT_MESSAGE" value="All files of TRAGALDABAS" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="418" y="548" width="1084" height="736" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597050046432">
-      <screen x="0" y="364" width="1920" height="1053" />
+    <state x="555" y="215" width="800" height="684" key="#Deployment" timestamp="1602759553351">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="555" y="215" width="800" height="684" key="#Deployment/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759553351" />
+    <state x="534" y="205" width="832" height="711" key="#SSH_Configurations" timestamp="1602759372697">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="534" y="205" width="832" height="711" key="#SSH_Configurations/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759372697" />
+    <state x="418" y="524" width="1084" height="736" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602080170317">
+      <screen x="0" y="340" width="1920" height="1051" />
+    </state>
+    <state x="418" y="524" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.340.1920.1051/1920.0.1280.1024@0.340.1920.1051" timestamp="1602080170317" />
     <state x="418" y="548" width="1084" height="736" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1597050046432" />
-    <state x="593" y="356" width="724" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599563862783">
-      <screen x="0" y="29" width="1920" height="1051" />
+    <state x="593" y="743" width="724" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1600678921997">
+      <screen x="0" y="415" width="1920" height="1053" />
     </state>
     <state x="593" y="356" width="724" height="403" key="#com.intellij.fileTypes.FileTypeChooser/0.29.1920.1051@0.29.1920.1051" timestamp="1599563862783" />
+    <state x="593" y="743" key="#com.intellij.fileTypes.FileTypeChooser/0.415.1920.1053/1920.0.1280.1024@0.415.1920.1053" timestamp="1600678921997" />
     <state x="743" y="624" width="424" height="591" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1596722857125">
       <screen x="0" y="364" width="1920" height="1053" />
     </state>
@@ -144,22 +183,39 @@
       <screen x="0" y="29" width="1920" height="1051" />
     </state>
     <state x="696" y="407" width="518" height="301" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.29.1920.1051@0.29.1920.1051" timestamp="1599726389265" />
-    <state x="743" y="674" width="424" height="491" key="FileChooserDialogImpl" timestamp="1596723083850">
-      <screen x="0" y="364" width="1920" height="1053" />
+    <state x="743" y="337" width="424" height="491" key="FileChooserDialogImpl" timestamp="1602759004848">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="743" y="337" key="FileChooserDialogImpl/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759004848" />
+    <state x="743" y="648" key="FileChooserDialogImpl/0.338.1920.1053/1920.0.1280.1024@0.338.1920.1053" timestamp="1601306427572" />
+    <state x="743" y="649" width="424" height="491" key="FileChooserDialogImpl/0.340.1920.1051/1920.0.1280.1024@0.340.1920.1051" timestamp="1602080423907" />
     <state x="743" y="674" width="424" height="491" key="FileChooserDialogImpl/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1596723083850" />
-    <state x="595" y="138" width="1022" height="737" key="SettingsEditor" timestamp="1599566057855">
-      <screen x="0" y="29" width="1920" height="1051" />
+    <state width="640" height="204" key="ImportCMakeProjectWizard.bottomPanel" timestamp="1602080273884">
+      <screen x="0" y="340" width="1920" height="1051" />
     </state>
+    <state width="640" height="204" key="ImportCMakeProjectWizard.bottomPanel/0.340.1920.1051/1920.0.1280.1024@0.340.1920.1051" timestamp="1602080273884" />
+    <state width="640" height="476" key="ImportCMakeProjectWizard.topPanel" timestamp="1602080273884">
+      <screen x="0" y="340" width="1920" height="1051" />
+    </state>
+    <state width="640" height="476" key="ImportCMakeProjectWizard.topPanel/0.340.1920.1051/1920.0.1280.1024@0.340.1920.1051" timestamp="1602080273884" />
+    <state x="595" y="136" width="1022" height="737" key="SettingsEditor" timestamp="1602759162653">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="595" y="136" width="1022" height="737" key="SettingsEditor/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759162653" />
     <state x="595" y="138" width="1022" height="737" key="SettingsEditor/0.29.1920.1051@0.29.1920.1051" timestamp="1599566057855" />
     <state x="595" y="473" width="1022" height="737" key="SettingsEditor/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1596790306935" />
     <state x="555" y="290" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1599218028808">
       <screen x="0" y="29" width="1920" height="1051" />
     </state>
     <state x="555" y="290" width="800" height="535" key="Vcs.Push.Dialog.v2/0.29.1920.1051@0.29.1920.1051" timestamp="1599218028808" />
-    <state x="741" y="789" width="438" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600094741452">
-      <screen x="0" y="337" width="1920" height="1080" />
+    <state x="799" y="453" width="321" height="207" key="WebDeployment.AddServerDialog.v.1" timestamp="1602759207836">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="799" y="453" width="321" height="207" key="WebDeployment.AddServerDialog.v.1/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759207836" />
+    <state x="2414" y="429" width="428" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602168021972">
+      <screen x="1920" y="0" width="1280" height="1024" />
+    </state>
+    <state x="2414" y="429" width="428" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.338.1920.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1602168021972" />
     <state x="741" y="805" width="438" height="177" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1597050388093" />
     <state x="741" y="789" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.337.1920.1080@0.337.1920.1080" timestamp="1600094741452" />
     <state x="287" y="27" width="1508" height="1023" maximized="true" key="dock-window-1" timestamp="1597135313539">
@@ -167,10 +223,17 @@
     </state>
     <state x="287" y="27" width="1508" height="1023" key="dock-window-1/0.337.1920.1080/1920.0.1920.1080@0.337.1920.1080" timestamp="1597076793628" />
     <state x="2069" y="0" width="1518" height="1016" maximized="true" key="dock-window-1/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1597135313539" />
-    <state x="623" y="262" width="672" height="678" key="search.everywhere.popup" timestamp="1599813532333">
-      <screen x="0" y="29" width="1920" height="1051" />
+    <state x="856" y="270" width="197" height="580" key="ftp.server.browser" timestamp="1602759427744">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="856" y="270" width="197" height="580" key="ftp.server.browser/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759427744" />
+    <state x="623" y="260" width="672" height="681" key="search.everywhere.popup" timestamp="1602759053667">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="623" y="260" width="672" height="681" key="search.everywhere.popup/0.27.1920.1053/1920.0.1280.1024@0.27.1920.1053" timestamp="1602759053667" />
     <state x="623" y="262" width="672" height="678" key="search.everywhere.popup/0.29.1920.1051@0.29.1920.1051" timestamp="1599813532333" />
+    <state x="623" y="573" width="672" height="679" key="search.everywhere.popup/0.340.1920.1051/1920.0.1280.1024@0.340.1920.1051" timestamp="1602080356136" />
     <state x="2543" y="239" key="search.everywhere.popup/0.364.1920.1053/1920.0.1920.1080@0.364.1920.1053" timestamp="1596790678180" />
+    <state x="623" y="648" width="672" height="680" key="search.everywhere.popup/0.415.1920.1053/1920.0.1280.1024@0.415.1920.1053" timestamp="1600850176858" />
   </component>
 </project>

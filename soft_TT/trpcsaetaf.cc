@@ -219,7 +219,7 @@ Int_t TRpcSaetaF::execute() {
 						//cout<<"Iter "<<l<<endl;
 						A = AVector(SInit, x,y,time,z) + AVector(SInit, x2,y2,time2,z2) + AVector(SInit, x3,y3,time3,z3);
 						K = KMatrix(SInit, z) + KMatrix(SInit, z2) + KMatrix(SInit, z3);
-						mod  = TMath::Sqrt(SInit.E2Norm());
+						mod  = TMath::Sqrt(SInit.E2Norm());  // E2Norm(): Square of the Euclidian norm, SUM{ m(i,j)^2 }
 						S3Planes = K.Invert()*A;
 						SInit    = S3Planes;
 						mod2 = TMath::Sqrt(SInit.E2Norm());
