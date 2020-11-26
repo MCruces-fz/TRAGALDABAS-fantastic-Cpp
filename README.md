@@ -3,9 +3,8 @@ Saeta's reconstruction for TRAGALDABAS detector with Kalman filter.
 
 ### Files:
 
-- ***ttmatrix.cc*** contains *ttmatrix* class
-- ***trpcsaeta.cc*** contains *trpcsaeta* class
-- ***trpcsaetaf.cc*** contains the reconstruction
+- ***sshcopy.sh*** updates local repository by scp.
+- ***soft_TT/*** is the directory with the full trufa code.
 
 > **Cambiar los siguientes aspectos:**
 > - Añadir comentarios según vaya entendido el código.

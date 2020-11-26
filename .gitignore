@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# My .GitIgnores
+.idea
+
 # Compiled Object files
 *.slo
 *.lo

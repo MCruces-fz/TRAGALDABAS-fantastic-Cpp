@@ -1,1 +1,0 @@
-g++ -Wall -g -O -fPIC `root-config --cflags` analysis.cc `root-config --glibs` `root-config --libs` -L ./ -I ./  -ltunpacker -o analysis

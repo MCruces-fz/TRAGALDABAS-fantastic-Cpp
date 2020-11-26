@@ -597,67 +597,63 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
     // n = 0, standard mode, just calculate the pedestals and exchande in the parameter file which is previously declared.
     // n = 1, special mode:  create pedestals and set time offsets to 0.
 
-    // Suite of consecutive data records (TKey instances) with a well defined format
     TFile fOut(Form("%s%s",odir,ofile),"RECREATE");
 
-    // 1-D histograms with a double per channel
     TH1D *hq[3*10*12];
     TH1D *hdta[3*10*12];
     TH1D* hdt[10*12*10*12+1];
     TH1D* hdt2[10*12*10*12+1];
 
-    // Saving data on histograms
     for(Int_t i=0;i<3;i++) {
-        for(Int_t j=0;j<10;j++) {
-            for(Int_t k=0;k<12;k++) {
-            hq[i*10*12+j*12+k] = new TH1D(Form("h_q_d%i_r%i_c%i",i,j,k),
-                           Form("h_q_d%i_r%i_c%i;#Q [ns];Entries",i,j,k),1000,0,200);
-            hdta[i*10*12+j*12+k] = new TH1D(Form("h_dta_d%i_r%i_c%i",i,j,k),
-                           Form("h_dta_d%i_r%i_c%i;#Q [ns];Entries",i,j,k),250,-20,20);
-            }
-        }
+	for(Int_t j=0;j<10;j++) {
+	    for(Int_t k=0;k<12;k++) {
+		hq[i*10*12+j*12+k] = new TH1D(Form("h_q_d%i_r%i_c%i",i,j,k),
+				       Form("h_q_d%i_r%i_c%i;#Q [ns];Entries",i,j,k),1000,0,200);
+		hdta[i*10*12+j*12+k] = new TH1D(Form("h_dta_d%i_r%i_c%i",i,j,k),
+				       Form("h_dta_d%i_r%i_c%i;#Q [ns];Entries",i,j,k),250,-20,20);
+	    }
+	}
     }
     for(Int_t i=0;i<10;i++) {
-        for(Int_t j=0;j<12;j++) {
+	for(Int_t j=0;j<12;j++) {
             for(Int_t k=0;k<10;k++) {
-                for(Int_t l=0;l<12;l++) {
-                    hdt[i*12*10*12+j*10*12+k*12+l] = new TH1D(Form("h_dt_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
-                                   Form("h_dt_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
-                                   250,-20,20);
-                    hdt2[i*12*10*12+j*10*12+k*12+l] = new TH1D(Form("h_dt2_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
-                                   Form("h_dt2_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
-                                   250,-40,40);
+		for(Int_t l=0;l<12;l++) {
+		    hdt[i*12*10*12+j*10*12+k*12+l] = new TH1D(Form("h_dt_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
+					       Form("h_dt_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
+					       250,-20,20);
+		    hdt2[i*12*10*12+j*10*12+k*12+l] = new TH1D(Form("h_dt2_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
+					       Form("h_dt2_r1_%i_c1_%i_r2_%i_c2_%i",i,j,k,l),
+					       250,-40,40);
 
-                }
-            }
-        }
+		}
+	    }
+	}
     }
     hdt[10*12*10*12] = new TH1D("h_dt_all","h_dt_all;Dt [ns];entries",500,-80,80);
     hdt2[10*12*10*12] = new TH1D("h_dt2_all","h_dt2_all;Dt [ns];entries",500,-80,80);
 
 
-    // Cleaning hdt and hdt2
     //TH1D**** hq[][][];
     //TH1D***** hdt[][][][];
     for(Int_t i=0;i<3;i++) {
-        for(Int_t j=0;j<10;j++) {
-            for(Int_t k=0;k<12;k++) {
-            hq[i*10*12+j*12+k]->Reset();
-
-            hdta[i*10*12+j*12+k]->Reset();
-            }
-        }
+	for(Int_t j=0;j<10;j++) {
+	    for(Int_t k=0;k<12;k++) {
+		hq[i*10*12+j*12+k]->Reset();
+				  
+		hdta[i*10*12+j*12+k]->Reset();
+	    }
+	}
     }
     for(Int_t i=0;i<10;i++) {
-        for(Int_t j=0;j<12;j++) {
+	for(Int_t j=0;j<12;j++) {
             for(Int_t k=0;k<10;k++) {
-                for(Int_t l=0;l<12;l++) {
-                    hdt[i*12*10*12+j*10*12+k*12+l]->Reset();
-                    hdt2[i*12*10*12+j*10*12+k*12+l]->Reset();
+		for(Int_t l=0;l<12;l++) {
+		    hdt[i*12*10*12+j*10*12+k*12+l]->Reset();
+		    hdt2[i*12*10*12+j*10*12+k*12+l]->Reset();
 
-                }
-            }
-        }
+		}
+	    }
+	}
     }
     hdt[10*12*10*12]->Reset();
     hdt2[10*12*10*12]->Reset();
@@ -673,45 +669,44 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
     std::ifstream file(list.Data());
     TString fName;
     Int_t ntot=0;
-    while(!file.eof()) {  // It iterates until the end of the file
-        file>>fName;
-        cout<<"FILENAME: "<<fName.Data()<<" Filedir "<<dir<<endl;
-        if(!fName||!fName.Contains("hld"))break;
-        setInputFile(dir,fName.Data());
-            cout<<" File set "<<inputFile.c_str()<<endl;
-        EventNr=0;
-            pEvent = new HldEvent(inputFile.c_str(), 999, " ", -100000,100000);
-            /*
-        if(!pEvent)pEvent= new HldEvent(inputFile.c_str(), 999, " ", -100000,100000);
-        else {
+    while(!file.eof()) {
+	file>>fName;
+	cout<<"FILENAME: "<<fName.Data()<<" Filedir "<<dir<<endl;
+	if(!fName||!fName.Contains("hld"))break;
+	setInputFile(dir,fName.Data());
+        cout<<" File set "<<inputFile.c_str()<<endl;
+	EventNr=0;
+        pEvent = new HldEvent(inputFile.c_str(), 999, " ", -100000,100000);
+        /*
+	if(!pEvent)pEvent= new HldEvent(inputFile.c_str(), 999, " ", -100000,100000);
+	else {
 
-            pEvent->setFile(inputFile.c_str());
-            pEvent->setSubEvtId(999);
-            pEvent->init();
-        }
-            */
-        pEvent->setQuietMode(true);
-        pEvent->setFullSetup(true);
-        pEvent->setVHR(false);
-            pEvent->setDebugFlag(0);
-            pEvent->setDebugFlag1(0);
-        pRootFile=0;
-        cout<<"Starting event loop "<<endl;
-            cout<<"Pointer pEvent "<<pEvent<<endl;
-        if(nEvt>0 && ntot <nEvt )
-        {
-            eventLoopFillCal(nEvt,0,hq,hdt,hdt2);
-            ntot++;
-        }
-        delete pEvent;
-            pEvent = NULL;
-            //if(ntot>10)break;
+	    pEvent->setFile(inputFile.c_str());
+	    pEvent->setSubEvtId(999);
+	    pEvent->init();
+	}
+        */
+	pEvent->setQuietMode(true);
+	pEvent->setFullSetup(true);
+	pEvent->setVHR(false);
+        pEvent->setDebugFlag(0);
+        pEvent->setDebugFlag1(0);
+	pRootFile=0;
+	cout<<"Starting event loop "<<endl;
+        cout<<"Pointer pEvent "<<pEvent<<endl;
+	if(nEvt>0 && ntot <nEvt )
+	{
+	    eventLoopFillCal(nEvt,0,hq,hdt,hdt2);
+	    ntot++;
+	}
+	delete pEvent;
+        pEvent = NULL;
+        //if(ntot>10)break;
     }
     //file.close();
     fOut.cd();
 
 
-    // 1-Dim functions defined between lower and upper limits
     TF1* fg = new TF1("fg","gaus",-1000,1000);
     TF1* fgt = new TF1("fgt","gaus",-1000,1000);
     Float_t valq[3][10][12];
@@ -726,22 +721,22 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
     Float_t stime  = fg2->GetParameter(1);
 
     for(Int_t i=0;i<3;i++) {
-        for(Int_t j=0;j<10;j++) {
-            for(Int_t k=0;k<12;k++) {
-            valq[i][j][k] = 0;
-            Int_t   maxb = hq[i*10*12+j*12+k]->GetMaximumBin();
-            Float_t max  = hq[i*10*12+j*12+k]->GetBinCenter(maxb);
-            fg->SetParameters(hq[i*10*12+j*12+k]->GetMaximum(),max,0.3);
-                    fg->SetParLimits(1,max-0.5,max+0.5);
-            hq[i*10*12+j*12+k]->Fit(fg,"NQR","",max-1.,max+1.);
-            hq[i*10*12+j*12+k]->Fit(fg,"QR","",fg->GetParameter(1)-fg->GetParameter(2)*3.,fg->GetParameter(1)+fg->GetParameter(2)*3.);
-            hq[i*10*12+j*12+k]->Fit(fg,"QR","",fg->GetParameter(1)-fg->GetParameter(2)*3.,fg->GetParameter(1)+fg->GetParameter(2)*3.);
-            valq[i][j][k] = fg->GetParameter(1)+fg->GetParameter(2)*2.;
-            if(n==0||n==1)
-                hq[i*10*12+j*12+k]->Write();
-            // hdta[i*10*12+j*12+k]->Write();
-            }
-        }
+	for(Int_t j=0;j<10;j++) {
+	    for(Int_t k=0;k<12;k++) {
+		valq[i][j][k] = 0;
+		Int_t   maxb = hq[i*10*12+j*12+k]->GetMaximumBin();
+		Float_t max  = hq[i*10*12+j*12+k]->GetBinCenter(maxb);
+		fg->SetParameters(hq[i*10*12+j*12+k]->GetMaximum(),max,0.3);
+                fg->SetParLimits(1,max-0.5,max+0.5);
+		hq[i*10*12+j*12+k]->Fit(fg,"NQR","",max-1.,max+1.);
+		hq[i*10*12+j*12+k]->Fit(fg,"QR","",fg->GetParameter(1)-fg->GetParameter(2)*3.,fg->GetParameter(1)+fg->GetParameter(2)*3.);
+		hq[i*10*12+j*12+k]->Fit(fg,"QR","",fg->GetParameter(1)-fg->GetParameter(2)*3.,fg->GetParameter(1)+fg->GetParameter(2)*3.);
+		valq[i][j][k] = fg->GetParameter(1)+fg->GetParameter(2)*2.;
+		if(n==0||n==1)
+		    hq[i*10*12+j*12+k]->Write();
+		// hdta[i*10*12+j*12+k]->Write();
+	    }
+	}
     }
     Double_t dt[10][12][10][12];//={0.};
     Bool_t   dtb[10][12][10][12];//={0};
@@ -753,161 +748,166 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
 
 
     for(Int_t p=0;p<3;p++) {
-        for(Int_t i=0;i<10;i++) {
-            for(Int_t j=0;j<12;j++) {
-                    dtc[p][i][j]=0.;
-            }
-        }
+	for(Int_t i=0;i<10;i++) {
+	    for(Int_t j=0;j<12;j++) {
+                dtc[p][i][j]=0.;
+	    }
+	}
     }
 
+
+
+
     if(n==0) {
-        TRandom3 rnd;
-        rnd.SetSeed(0);
-        for(Int_t i=0;i<10;i++) {
-            for(Int_t j=0;j<12;j++) {
-                for(Int_t k=0;k<10;k++) {
-                    for(Int_t l=0;l<12;l++) {
+
+	TRandom3 rnd;
+	rnd.SetSeed(0);
+	for(Int_t i=0;i<10;i++) {
+	    for(Int_t j=0;j<12;j++) {
+		for(Int_t k=0;k<10;k++) {
+		    for(Int_t l=0;l<12;l++) {
                         dt[i][j][k][l]=0.;
                         dtb[i][j][k][l]=0;
                         dt2[i][j][k][l]=0.;
                         dtb2[i][j][k][l]=0;
 
-                        if(n==0) {
-                            hdt[i*12*10*12+j*10*12+k*12+l]->Write();
-                            hdt2[i*12*10*12+j*10*12+k*12+l]->Write();
-                        }
+
+			if(n==0) {
+			    hdt[i*12*10*12+j*10*12+k*12+l]->Write();
+			    hdt2[i*12*10*12+j*10*12+k*12+l]->Write();
+			}
 
                         if(hdt[i*12*10*12+j*10*12+k*12+l] -> GetEntries()>20.) {
-                            fgt->SetParameters(hdt[i*12*10*12+j*10*12+k*12+l]->GetMean(),hdt[i*12*10*12+j*10*12+k*12+l]->GetMean(),0.5);
-                            hdt[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","");
-                            hdt[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","",
-                                             fgt->GetParameter(1)-fgt->GetParameter(2)*4.,
-                                             fgt->GetParameter(1)+fgt->GetParameter(2)*4.);
-                            dt[i][j][k][l] = fgt->GetParameter(1);
-                            dtb[i][j][k][l] = 1;
-                            //cout<<" i "<<i<<" "<<j<<" "<<k<<" "<<l<<" "<<dt[i][j][k][l]<<endl;
+			    fgt->SetParameters(hdt[i*12*10*12+j*10*12+k*12+l]->GetMean(),hdt[i*12*10*12+j*10*12+k*12+l]->GetMean(),0.5);
+			    hdt[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","");
+			    hdt[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","",
+								 fgt->GetParameter(1)-fgt->GetParameter(2)*4.,
+								 fgt->GetParameter(1)+fgt->GetParameter(2)*4.);
+			    dt[i][j][k][l] = fgt->GetParameter(1);
+			    dtb[i][j][k][l] = 1;
+			    //cout<<" i "<<i<<" "<<j<<" "<<k<<" "<<l<<" "<<dt[i][j][k][l]<<endl;
 
-                        }
+			}
 
-                        if(hdt2[i*12*10*12+j*10*12+k*12+l] -> GetEntries()>20.) {
+			if(hdt2[i*12*10*12+j*10*12+k*12+l] -> GetEntries()>20.) {
                             fgt->SetParameters(hdt2[i*12*10*12+j*10*12+k*12+l]->GetMean(),hdt2[i*12*10*12+j*10*12+k*12+l]->GetMean(),0.5);
-                            //fgt->SetParameters(1.,0.,0.1);
-                            hdt2[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","");
-                            hdt2[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","",
-                                              fgt->GetParameter(1)-fgt->GetParameter(2)*4.,
-                                              fgt->GetParameter(1)+fgt->GetParameter(2)*4.);
-                            dt2[i][j][k][l] = fgt->GetParameter(1);
-                            //cout<<" i2 "<<i<<" "<<j<<" "<<k<<" "<<l<<" "<<dt2[i][j][k][l]<<endl;
-                            dtb2[i][j][k][l] = 1;
-                        }
-                    }
-                }
-            }
-        }
+			    //fgt->SetParameters(1.,0.,0.1);
+			    hdt2[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","");
+			    hdt2[i*12*10*12+j*10*12+k*12+l] ->Fit(fgt,"WWNQR","",
+								  fgt->GetParameter(1)-fgt->GetParameter(2)*4.,
+								  fgt->GetParameter(1)+fgt->GetParameter(2)*4.);
+			    dt2[i][j][k][l] = fgt->GetParameter(1);
+			    //cout<<" i2 "<<i<<" "<<j<<" "<<k<<" "<<l<<" "<<dt2[i][j][k][l]<<endl;
+			    dtb2[i][j][k][l] = 1;
+			}
+		    }
+		}
+	    }
+	}
 
-        TH1F* h_dt[3][10][12];
-        TH1F* h_dt2[3][10][12];
-            TH1F* h_dt3[3][10][12];
-            TH1F* h_dt4[3][10][12];
-            TH1F* h_dt5[3][10][12];
+	TH1F* h_dt[3][10][12];
+	TH1F* h_dt2[3][10][12];
+        TH1F* h_dt3[3][10][12];
+        TH1F* h_dt4[3][10][12];
+        TH1F* h_dt5[3][10][12];
 
 
-           // cout<<"Reach this point"<<endl;
+       // cout<<"Reach this point"<<endl;
 
-        for(Int_t p=0;p<3;p++) {
-            for(Int_t i=0;i<10;i++) {
-                for(Int_t j=0;j<12;j++) {
-                    //cout<<p<<" "<<i<<" "<<j<<endl;
-                    h_dt[p][i][j] = new TH1F(Form("h_dt_p%i_r%i_c%i",p,i,j),Form("h_dt_p%i_r%i_c%i",p,i,j),1000,-50,50);
-                }
-            }
-        }
+	for(Int_t p=0;p<3;p++) {
+	    for(Int_t i=0;i<10;i++) {
+		for(Int_t j=0;j<12;j++) {
+		    //cout<<p<<" "<<i<<" "<<j<<endl;
+		    h_dt[p][i][j] = new TH1F(Form("h_dt_p%i_r%i_c%i",p,i,j),Form("h_dt_p%i_r%i_c%i",p,i,j),1000,-50,50);
+		}
+	    }
+	}
 
-        for(Int_t i=0;i<10;i++) {
-            for(Int_t j=0;j<12;j++) {
-                for(Int_t k=0;k<10;k++) {
-                    for(Int_t l=0;l<12;l++) {
-                        if(dtb[i][j][k][l]) {
-                            h_dt[0][i][j] -> Fill(0.5*dt[i][j][k][l]);
-                            h_dt[1][k][l] -> Fill(-0.5*dt[i][j][k][l]);
-                        }
-                        if(dtb2[i][j][k][l]) {
-                            h_dt[2][i][j] -> Fill(0.5*dt2[i][j][k][l]);
-                        }
-                    }
-                }
-            }
-        }
+	for(Int_t i=0;i<10;i++) {
+	    for(Int_t j=0;j<12;j++) {
+		for(Int_t k=0;k<10;k++) {
+		    for(Int_t l=0;l<12;l++) {
+			if(dtb[i][j][k][l]) {
+			    h_dt[0][i][j] -> Fill(0.5*dt[i][j][k][l]);
+			    h_dt[1][k][l] -> Fill(-0.5*dt[i][j][k][l]);
+			}
+			if(dtb2[i][j][k][l]) {
+			    h_dt[2][i][j] -> Fill(0.5*dt2[i][j][k][l]);
+			}
+		    }
+		}
+	    }
+	}
 
-        for(Int_t p=0;p<3;p++) {
-            for(Int_t i=0;i<10;i++) {
+	for(Int_t p=0;p<3;p++) {
+	    for(Int_t i=0;i<10;i++) {
                 for(Int_t j=0;j<12;j++) {
                     h_dt[p][i][j] ->ClearUnderflowAndOverflow();
-                    Int_t maxbin = h_dt[p][i][j] -> GetMaximumBin();
-                    Double_t binc = h_dt[p][i][j] -> GetBinCenter(maxbin);
-                    dtc[p][i][j] = binc;
-                    //cout<<"first val "<<p<<" "<<i<<" "<<j<<" "<<dtc[p][i][j]<<endl;
-                }
-            }
-        }
+		    Int_t maxbin = h_dt[p][i][j] -> GetMaximumBin();
+		    Double_t binc = h_dt[p][i][j] -> GetBinCenter(maxbin);
+		    dtc[p][i][j] = binc;
+		    //cout<<"first val "<<p<<" "<<i<<" "<<j<<" "<<dtc[p][i][j]<<endl;
+		}
+	    }
+	}
 
+	
+	for(Int_t p=0;p<3;p++) {
+	    for(Int_t i=0;i<10;i++) {
+		for(Int_t j=0;j<12;j++) {
+		    //cout<<p<<" "<<i<<" "<<j<<endl;
+		    h_dt2[p][i][j] = new TH1F(Form("h_dt2_p%i_r%i_c%i",p,i,j),Form("h_dt2_p%i_r%i_c%i",p,i,j),1000,-20,20);
+		}
+            }
+	}
 
-        for(Int_t p=0;p<3;p++) {
-            for(Int_t i=0;i<10;i++) {
-                for(Int_t j=0;j<12;j++) {
-                    //cout<<p<<" "<<i<<" "<<j<<endl;
-                    h_dt2[p][i][j] = new TH1F(Form("h_dt2_p%i_r%i_c%i",p,i,j),Form("h_dt2_p%i_r%i_c%i",p,i,j),1000,-20,20);
-                }
-            }
-        }
+	for(Int_t it = 0;it<20;it++) {
+	    //cout<<"Reached the 20 iterations "<<it<<endl;
+	    for(Int_t p=0;p<3;p++) {
+		for(Int_t i=0;i<10;i++) {
+		    for(Int_t j=0;j<12;j++) {
+			h_dt2[p][i][j] -> Reset();
+		    }
+		}
+	    }
+	    for(Int_t i=0;i<10;i++) {
+		for(Int_t j=0;j<12;j++) {
+		    for(Int_t k=0;k<10;k++) {
+			for(Int_t l=0;l<12;l++) {
+			    if(dtb[i][j][k][l]) {
+				Double_t rand = rnd.Rndm();
+				h_dt2[0][i][j] -> Fill((1.-rand)*(dt[i][j][k][l]+dtc[1][k][l]-dtc[0][i][j]));
+				h_dt2[1][k][l] -> Fill(-rand    *(dt[i][j][k][l]+dtc[1][k][l]-dtc[0][i][j]));
+			    }
+			    if(dtb2[i][j][k][l]) {
+				h_dt2[2][i][j] -> Fill((1.)*(dt2[i][j][k][l]+dtc[1][k][l]-dtc[2][i][j]));
+			    }
+			}
+		    }
+		}
+	    }
+	    for(Int_t p=0;p<3;p++) {
+		for(Int_t i=0;i<10;i++) {
+		    for(Int_t j=0;j<12;j++) {
+			Int_t maxbin = h_dt2[p][i][j] -> GetMaximumBin();
+			Double_t binc = h_dt2[p][i][j] -> GetBinCenter(maxbin);
+			dtc[p][i][j] += binc;
+			//if(it==19) {
+			 //   cout<<"20 val "<<p<<" "<<i<<" "<<j<<" "<<dtc[p][i][j]<<endl;
+			//}
+		    }
+		}
+	    }
+	}
 
-        for(Int_t it = 0;it<20;it++) {
-            //cout<<"Reached the 20 iterations "<<it<<endl;
-            for(Int_t p=0;p<3;p++) {
-                for(Int_t i=0;i<10;i++) {
-                    for(Int_t j=0;j<12;j++) {
-                    h_dt2[p][i][j] -> Reset();
-                    }
-                }
-            }
-            for(Int_t i=0;i<10;i++) {
-                for(Int_t j=0;j<12;j++) {
-                    for(Int_t k=0;k<10;k++) {
-                        for(Int_t l=0;l<12;l++) {
-                            if(dtb[i][j][k][l]) {
-                            Double_t rand = rnd.Rndm();
-                            h_dt2[0][i][j] -> Fill((1.-rand)*(dt[i][j][k][l]+dtc[1][k][l]-dtc[0][i][j]));
-                            h_dt2[1][k][l] -> Fill(-rand    *(dt[i][j][k][l]+dtc[1][k][l]-dtc[0][i][j]));
-                            }
-                            if(dtb2[i][j][k][l]) {
-                            h_dt2[2][i][j] -> Fill((1.)*(dt2[i][j][k][l]+dtc[1][k][l]-dtc[2][i][j]));
-                            }
-                        }
-                    }
-                }
-            }
-            for(Int_t p=0;p<3;p++) {
-                for(Int_t i=0;i<10;i++) {
-                    for(Int_t j=0;j<12;j++) {
-                    Int_t maxbin = h_dt2[p][i][j] -> GetMaximumBin();
-                    Double_t binc = h_dt2[p][i][j] -> GetBinCenter(maxbin);
-                    dtc[p][i][j] += binc;
-                    //if(it==19) {
-                     //   cout<<"20 val "<<p<<" "<<i<<" "<<j<<" "<<dtc[p][i][j]<<endl;
-                    //}
-                    }
-                }
-            }
-        }
-
-
-        for(Int_t p=0;p<3;p++) {
-            for(Int_t i=0;i<10;i++) {
-                for(Int_t j=0;j<12;j++) {
-                    //cout<<p<<" "<<i<<" "<<j<<endl;
-                    h_dt3[p][i][j] = new TH1F(Form("h_dt3_p%i_r%i_c%i",p,i,j),Form("h_dt3_p%i_r%i_c%i",p,i,j),1000,-10,10);
-                }
-            }
+	
+	for(Int_t p=0;p<3;p++) {
+	    for(Int_t i=0;i<10;i++) {
+		for(Int_t j=0;j<12;j++) {
+		    //cout<<p<<" "<<i<<" "<<j<<endl;
+		    h_dt3[p][i][j] = new TH1F(Form("h_dt3_p%i_r%i_c%i",p,i,j),Form("h_dt3_p%i_r%i_c%i",p,i,j),1000,-10,10);
+		}
+	    }
         }
 
         for(Int_t it = 0;it<100;it++) {
@@ -973,6 +973,8 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
             }
         }
 
+
+
         for(Int_t p=0;p<3;p++) {
             for(Int_t i=0;i<10;i++) {
                 for(Int_t j=0;j<12;j++) {
@@ -1016,6 +1018,7 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
                         rand*=(0.15-(it*0.0015)) + h_dt4[p][i][j] -> GetBinWidth(maxbin)*(rnd.Rndm()-0.5);
                         dtc[p][i][j] += fg->GetParameter(1)+rand;
                         //cout<<p<<" "<<i<<" "<<j<<" "<<dtc[p][i][j]<<endl;
+
                     }
                 }
             }
@@ -1074,25 +1077,32 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
     }
 
     for(Int_t i=0;i<3;i++) {
-        for(Int_t j=0;j<10;j++) {
-            for(Int_t k=0;k<12;k++) {
-            delete hq[i*10*12+j*12+k];
-            delete hdta[i*10*12+j*12+k];
-            }
-        }
+	for(Int_t j=0;j<10;j++) {
+	    for(Int_t k=0;k<12;k++) {
+		delete hq[i*10*12+j*12+k];
+		delete hdta[i*10*12+j*12+k];
+	    }
+	}
     }
     for(Int_t i=0;i<10;i++) {
-        for(Int_t j=0;j<12;j++) {
+	for(Int_t j=0;j<12;j++) {
             for(Int_t k=0;k<10;k++) {
-                for(Int_t l=0;l<12;l++) {
-                    delete hdt[i*12*10*12+j*10*12+k*12+l];
-                }
-            }
-        }
+		for(Int_t l=0;l<12;l++) {
+		    delete hdt[i*12*10*12+j*10*12+k*12+l];
+
+		}
+	    }
+	}
     }
     delete hdt[10*12*10*12];
 
+
+
+
+
+
     fOut.Close();
+
 
     delete fg;
     delete fg2;
@@ -1114,46 +1124,45 @@ void Unpacker::fillCalibration(const char* dir, TString list, const char* odir,c
 
     //ofstream fo("parhitfNewEmptyTimeChargePedestal.txt");
     if(n==0) {
-        ofstream fo(fileHitFinderParOut);
-        TRpcCalPar* calPar = new TRpcCalPar(fileHitFinderPar);
-        for(Int_t i=0;i<3;i++) {
-            for(Int_t j=0;j<10;j++) {
-                for(Int_t k=0;k<12;k++) {
-                    //fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<val[i][j][k]<<endl;
+	ofstream fo(fileHitFinderParOut);
+	TRpcCalPar* calPar = new TRpcCalPar(fileHitFinderPar);
+	for(Int_t i=0;i<3;i++) {
+	    for(Int_t j=0;j<10;j++) {
+		for(Int_t k=0;k<12;k++) {
+		    //fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<val[i][j][k]<<endl;
 
-                    Float_t calpar = calPar->getTimeCal(i, k, j) - dtc[i][j][k];
-                    //cout<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calpar<<" "<<calPar->getTimeCal(i, k, j)<<" "<<dtc[i][j][k]<<endl;
-                    //if(i==0)
-                    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calpar<<endl;
-                    //else
-                    //    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calPar->getTimeCal(i, k, j) <<endl;
-                }
-            }
-        }
-        fo.close();
-            delete calPar;
+		    Float_t calpar = calPar->getTimeCal(i, k, j) - dtc[i][j][k];
+		    //cout<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calpar<<" "<<calPar->getTimeCal(i, k, j)<<" "<<dtc[i][j][k]<<endl;
+		    //if(i==0)
+		    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calpar<<endl;
+		    //else
+		    //    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<calPar->getTimeCal(i, k, j) <<endl;
+		}
+	    }
+	}
+	fo.close();
+        delete calPar;
     }
 
     if(n==1) {
-        ofstream fo(fileHitFinderParOut);
-        TRpcCalPar* calPar = new TRpcCalPar(fileHitFinderPar);
-        for(Int_t i=0;i<3;i++) {
-            for(Int_t j=0;j<10;j++) {
-                for(Int_t k=0;k<12;k++) {
-                    //fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<val[i][j][k]<<endl;
-                    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<< 0.0 <<endl;
-                }
-            }
-        }
-        fo.close();
-            delete calPar;
+	ofstream fo(fileHitFinderParOut);
+	TRpcCalPar* calPar = new TRpcCalPar(fileHitFinderPar);
+	for(Int_t i=0;i<3;i++) {
+	    for(Int_t j=0;j<10;j++) {
+		for(Int_t k=0;k<12;k++) {
+		    //fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<<val[i][j][k]<<endl;
+		    fo<<i<<" "<<j<<" "<<k<<" "<<valq[i][j][k]<<" "<< 0.0 <<endl;
+		}
+	    }
+	}
+	fo.close();
+        delete calPar;
     }
 
+
+
+
 }
-
-
-
-
 Int_t Unpacker::syncCheck(const char* dir, TString file, Int_t nEvt,Int_t n)
 {
     // n = 0, standard mode, just calculate the pedestals and exchande in the parameter file which is previously declared.
