@@ -1,6 +1,9 @@
 # TRAGALDABAS-fantastic-Cpp
 Saeta's reconstruction for TRAGALDABAS detector with Kalman filter.
 
+[Good Method](https://github.com/go-hep/hep/blob/main/cmd/root2csv/main.go)
+
+
 ### Files:
 
 - ***sshcopy.sh*** updates local repository by scp.
@@ -21,3 +24,17 @@ Saeta's reconstruction for TRAGALDABAS detector with Kalman filter.
 > - Cambiar en trpcsaetaf.cc (linea 15) Double_t vc = 299.792458; por Double_t vc = 299.8; // mm/ns y cambiar 300. por vc en las líneas 115 y 125
 > - Arreglar tabulaciones en los bucles de tunpacker.cc
 
+Utilizar este código en bash para desempaquetar los datos:
+###### unpack.sh
+
+```bash
+#!/bin/bash
+
+for i in {306..335}
+
+do
+
+for a in `find /media/Datos2TB/tragaldabas/data/done/alberto/T01T02T03/20150107/done/ -type f -name tr20$i* -print`; do ./dst_nov2020.sh `basename $a`; done
+
+done
+```
