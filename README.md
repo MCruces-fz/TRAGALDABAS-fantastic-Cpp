@@ -29,12 +29,8 @@ Utilizar este código en bash para desempaquetar los datos:
 
 ```bash
 #!/bin/bash
-
 for i in {306..335}
-
 do
-
 for a in `find /media/Datos2TB/tragaldabas/data/done/alberto/T01T02T03/20150107/done/ -type f -name tr20$i* -print`; do ./dst_nov2020.sh `basename $a`; done
-
 done
 ```
