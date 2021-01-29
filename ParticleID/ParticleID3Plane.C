@@ -1,13 +1,12 @@
 
-// --------------------------------------------------
-//       -------   H O W   T O   U S E   -------
-//
-// $ root -l
-// root [0] gSystem->Load("/home/mcruces/Documents/GitHub/TRAGALDABAS-fantastic-Cpp/soft_TT/libtunpacker.so")
-// root [1] .L ParticleID3Plane.C
-// root [2] Saetas3Planes()
-//
-// ----------------------------------------------------
+// -------------------------------------------------- //
+//       -------   H O W   T O   U S E   -------      //
+//                                                    //
+//           $ root -l                                //
+//           root [0] .L ParticleID3Plane.C           //
+//           root [1] Saetas3Planes()                 //
+//                                                    //
+// -------------------------------------------------- //
 
 #include <iostream>
 #include <string>
@@ -25,18 +24,29 @@
 using namespace std;
 
 
-float ParticleMIDAS(float Chi2, float AnAlg, int MultTotAlg) {  // , float IdMotherAlg){
+float ParticleMIDAS(float Chi2, float AnAlg, int MultTotAlg) {
     /*
-     * This program classifies each particle according to its input parameters.
+     *       __  __ ___ ____    _    ____
+     *      |  \/  |_ _|  _ \  / \  / ___|
+     *      | |\/| || || | | |/ _ \ \___ \
+     *      | |  | || || |_| / ___ \ ___) |
+     *      |_|  |_|___|____/_/   \_\____/
+     *
+     *       //------------------------\\
+     *      // Author of the Algorithm: \\
+     *      \\   Yanis Fontenla Barba   //
+     *       \\------------------------//
+     *
+     *   This program classifies each particle according
+     * to its input parameters.
      *
      * Parameters:
-     *   - Chi2: Chi square value
-     *   - AnAlg:
-     *   - MultTotAlg: Multiplicity
-     *   - IdMotherAlg: Motherboard identification
+     *   - Chi2: Chi square value of the track
+     *   - AnAlg: Weighted multiplicity
+     *   - MultTotAlg: Number of hits in all planes in each event
      *
      * Return:
-     *   - IdMC: Particle identification
+     *   - Id: Particle identification
      */
 
     Int_t Id=0;
@@ -134,12 +144,11 @@ void Saetas3Planes() {
     // ---   D E C L A R A T I O N S   --- //
     Int_t rpcHitsPerEvent   = 0;
     Int_t rpcSaetaPerEvent  = 0;
-    Int_t hit1=0, hit3=0, hit4=0;
 
     // Heights of planes:
     Float_t heightT1 = 1826, heightT3 = 924, heightT4 = 87;
 
-    Float_t TotMult=0, a_n=0;
+    Float_t TotMult = 0, a_n = 0;
 
     Float_t Chi2;
 
@@ -153,17 +162,15 @@ void Saetas3Planes() {
     //Crystal Points (input)   -------------------------------------------------
     TClonesArray* rpcHitCA;
     TRpcHit** rpcHit;
-    rpcHitCA = new TClonesArray("TRpcHit", 5000); // Change 5000!!!
+    rpcHitCA = new TClonesArray("TRpcHit", 5); // Change 5000!!!
     TBranch *branchTRpcHit = tree ->GetBranch("rpchit");  // RPCHit  rpchit
-    //branchRpcHit->SetAddress(&rpcHitCA);
-    branchTRpcHit->SetAddress(&rpcHitCA);
+    branchTRpcHit->SetAddress(&rpcHitCA); // TODO: What is the meaning of this?
 
     //----   RPCSaeta (input)   -------------------------------------------------
     TClonesArray* rpcSaetaCA;
     TRpcSaeta** rpcSaeta;
-    rpcSaetaCA = new TClonesArray("TRpcSaeta", 5000);
+    rpcSaetaCA = new TClonesArray("TRpcSaeta", 5);
     TBranch *branchTRpcSaeta = tree ->GetBranch("RpcSaeta3Planes");  // RPCSaeta     RpcSaeta3Planes
-    //branchRpcSaeta->SetAddress(&rpcSaetaCA);
     branchTRpcSaeta->SetAddress(&rpcSaetaCA);
 
     //---------------------------------------------------------------------------
@@ -174,43 +181,57 @@ void Saetas3Planes() {
     // OUTPUT FILE
     fstream OutFile;
     OutFile.open("EstudEstad_4planosSinEdificio_M.txt", fstream::out);
-    OutFile << "Id_PartPrimaria" << "\t" << "Energia_PartPrimaria [GeV]" << "\t" << "Chi-Square" << "\t" << "a_n" << "\t" << "M_{Tot}" << "\t" << "M1" <<"\t"<< "M2" <<"\t"<< "M3" <<"\t"<< "M4"<< endl;
+    OutFile << "Id_PartPrimaria" << "\t" << "Energia_PartPrimaria [GeV]" << "\t" <<
+    "Chi-Square" << "\t" << "a_n" << "\t" << "M_{Tot}" << "\t" <<
+    "M1" <<"\t"<< "M2" << "\t" << "M3" << "\t" << "M4" << endl;
 
     cout << "Number of Events: " << nevents << endl;
 
     //LOOP ON EVENTS
-    for(int i=0;i<nevents;i++) {
+    for (int i = 0; i < nevents; i++) {
 
         tree->GetEvent(i);
         rpcHitsPerEvent = rpcHitCA->GetEntries();
         rpcSaetaPerEvent = rpcSaetaCA->GetEntries();
 
+        Int_t hit1=0, hit3=0, hit4=0;
 
-        if(rpcHitsPerEvent>0) {
+        if (rpcHitsPerEvent > 0) {
             rpcHit = new TRpcHit*[rpcHitsPerEvent];
 
             // LOOP ON HITS ON EACH EVENT
-            for(Int_t k=0;k<rpcHitsPerEvent;k++){
+            for (Int_t k = 0; k < rpcHitsPerEvent; k++) {
 
                 rpcHit[k] = new TRpcHit;
                 rpcHit[k] = (TRpcHit*) rpcHitCA->At(k);
 
                 TotMult++;
-                Float_t Z0 = rpcHit[k]->getZ();
+                Float_t Z0 = rpcHit[k]->getZ(); // FIXME: Loading twice fails!!
 
-                if(Z0 == heightT1) hit1++; // T1
-                if(Z0 == heightT3) hit3++; // T3
-                if(Z0 == heightT4) hit4++; // T4
+                if(Z0 == heightT1) {
+                    hit1++; // Plane T1
+                } else if (Z0 == heightT3) {
+                    hit3++; // Plane T3
+                } else if (Z0 == heightT4) {
+                    hit4++; // Plane T4
+                } else {
+                    cout << "Planes at: " << heightT1 << " mm, " << heightT3  << " mm, " << heightT4  << " mm" << endl;
+                    cout << "Current height: " << Z0 << endl;
+                    exit(-1);
+                }
+
             }
+            cout << "Event " << i << ", hits: (" << hit1 << ", " << hit1 << ", " << hit1 << ")" << endl;
         }
 
         a_n = hit1 * 0 + hit3 * 2 + hit4 * 3;
         rpcSaeta = new TRpcSaeta*[rpcSaetaPerEvent];
 
+//        rpcSaeta[0] = new TRpcSaeta;
+//        rpcSaeta[0] = (TRpcSaeta*) rpcSaetaCA->At(0);
+//        Float_t chiVal = rpcSaeta[0]->getChi2();
+//        cout << "----------- Evt " << i << ", Chi2 = " << rpcSaeta[0]->getChi2() << endl;
+
     }
 
-    cout << "Hits per plane: " << hit1 << ", " << hit3 << ", " << hit4 << endl;
-
-
 }
-
