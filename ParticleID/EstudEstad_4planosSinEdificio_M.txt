@@ -1,1 +1,0 @@
-Id_PartPrimaria	Energia_PartPrimaria [GeV]	Chi-Square	a_n	M_{Tot}	M1	M2	M3	M4
