@@ -398,7 +398,7 @@ Bool_t Filler::eventLoopFill(Int_t nbEvt, Int_t startEv)
             //if(sinc1 &&sinc2 && sinc3) {
             //    h_daq_active->Fill(timeEvt);
             //}
-            if(event->getEvtYear() == 2020 ) {
+            if(event->getEvtYear() == 2017 ) {
                 if(sinc1 &&sinc2) {
                     h_daq_active->Fill(timeEvt);
                 }
@@ -924,15 +924,10 @@ void doStaffCalibration(char* path,char* name) {
     TString day(fName(15,fName.First(".")-15));
     cout<<"DAY "<<day<<endl;
     cout<<"PATH to files "<<fName<<endl;
-    //unpack.setFileLookupPar("../pars/luptab.txt");
-    //unpack.setFileLookupPar("luptab2014_082_2015.txt");
-    //unpack.setFileLookupPar("../pars/luptab_20160722.txt");
-    //unpack.setFileLookupPar("../pars/luptab_20170900.txt");
-    //unpack.setFileLookupPar("luptable_corr_20180423.txt");
-    unpack.setFileLookupPar("luptab.txt");
+    unpack.setFileLookupPar("./luptab.txt");
     //unpack.setFileHitFinderPar("../pars/time_calPar.txt");
     //unpack.setFileHitFinderPar("../pars/time_calPar3planes.txt");
-    unpack.setFileHitFinderPar("empty_cal_2016.txt");
+    unpack.setFileHitFinderPar("./empty_cal_2016.txt");
     //unpack.setFileHitFinderPar("../specialDST/pars/"+day+"_CalPars.txt");
     //unpack.setFileHitFinderPar("../pars2/2017_day_255_CalPars.txt");
     //unpack.setFileHitFinderParOut("../2017DST/pars/"+day+"_CalPars.txt");
@@ -955,12 +950,7 @@ void doStaffAnalysis(char* path,char* name){
     TString day(fName(15,fName.First(".")-15));
     cout<<"ana DAY "<<day<<endl;
     cout<<"ana PATH to files "<<fName<<endl;
-    //fill.setFileLookupPar("../pars/luptab.txt");
-    //fill.setFileLookupPar("luptab2014_082_2015.txt");
-    //fill.setFileLookupPar("../pars/luptab_20160722.txt");
-    //fill.setFileLookupPar("../pars/luptab_20170900.txt");
-    //fill.setFileLookupPar("luptable_corr_20180423.txt");
-    fill.setFileLookupPar("luptab.txt");
+    fill.setFileLookupPar("./luptab.txt");
     //fill.setFileHitFinderPar("../2017DST/pars/"+day+"_CalPars.txt");
     // Tracking Test Lines
     fill.setFileHitFinderPar("../2020DST/pars/"+day+"_CalPars.txt");

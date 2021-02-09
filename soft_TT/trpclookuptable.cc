@@ -20,8 +20,9 @@ RpcLookupTable::RpcLookupTable() {
 	    }
 	}
     }
-//    Int_t ind[4] = {871,899,877,878};
-    Int_t ind[4] = {837,871,888,899};
+    //Int_t ind[4] = {871,899,877,878};
+    Int_t ind[4] = {837,871,888,899}; // T3-T4-T1 if you change this -> change also the luptab order
+    //Int_t ind[4] = {888,837,871,899}; // T1-T3-T4 sorted top-bottom
     //Int_t ind[4] = {899,871,888,811};
 
     for(Int_t i=0;i<4;i++) {
@@ -41,7 +42,8 @@ RpcLookupTable::RpcLookupTable(TString filename) {
 	}
     }
 
-    Int_t ind[4] = {837,871,888,899};
+    Int_t ind[4] = {837,871,888,899}; // T3-T4-T1 if you change this -> change also the luptab order
+    //Int_t ind[4] = {888,837,871,899}; // T1-T3-T4 sorted top-bottom
     //Int_t ind[4] = {899,871,888,811};
 
     for(Int_t i=0;i<4;i++) {

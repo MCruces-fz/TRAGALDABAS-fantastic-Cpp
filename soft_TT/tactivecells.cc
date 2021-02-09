@@ -11,7 +11,6 @@ TActiveCells::TActiveCells( ){
 TActiveCells::TActiveCells(TString filename) {
 
     //We get from files the parameters
-
     fInPar = TFile::Open(filename);
 
     //cout<<"finpar "<<fInPar<<endl;
@@ -21,9 +20,9 @@ TActiveCells::TActiveCells(TString filename) {
 	h_active_cells[1][j] = (TH2D*)fInPar->Get(Form("h_h%i_2016",j));
 	h_active_cells[2][j] = (TH2D*)fInPar->Get(Form("h_h%i_2017",j));
         h_active_cells[3][j] = (TH2D*)fInPar->Get(Form("h_h%i_2018",j));
+        h_active_cells[4][j] = (TH2D*)fInPar->Get(Form("h_h%i_2019",j));
+        h_active_cells[5][j] = (TH2D*)fInPar->Get(Form("h_h%i_2020",j));
         //cout<<"j "<<j<<" "<<h_active_cells[0][j]<<" "<<h_active_cells[1][j]<<endl;
-
-
     }
 }
 
@@ -35,8 +34,9 @@ Bool_t TActiveCells::isCellActive(Int_t year, Float_t doy, Int_t detector, Int_t
     if(year==2016) y = 1;
     if(year==2017) y = 2;
     if(year==2018) y = 3;
-
-    if(year==2019) return kTRUE;
+    if(year==2019) y = 4;
+    if(year==2020) y = 5;
+    if(year>=2021) return kTRUE;
 
     if(!h_active_cells[y][detector])  {
         //cout<<"Pars not loaded "<<h_active_cells[y][detector]<<endl;

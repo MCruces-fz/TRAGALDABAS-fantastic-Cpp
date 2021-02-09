@@ -10,14 +10,14 @@
 class TActiveCells: public TObject
 {
 protected:
-    TH2D* h_active_cells[4][4];    //!- 4 years (2015-2018) x 4 detectors
+    TH2D* h_active_cells[6][4];    //!- 6 years (2015-2020) x 4 detectors
     TFile* fInPar;
 
 public:
     TActiveCells();
     TActiveCells(TString filename);
     ~TActiveCells() {
-	for(Int_t i=0;i<4;i++) {
+	for(Int_t i=0;i<6;i++) {
 	    for(Int_t j=0;j<4;j++) {
 		delete h_active_cells[i][j];
 	    }

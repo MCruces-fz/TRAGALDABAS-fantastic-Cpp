@@ -1726,7 +1726,7 @@ Bool_t Unpacker::eventLoop(Int_t nbEvt,Int_t startEv)
 	rawFinder -> init(fileLookupPar);
 
 	TRpcHitF* calFinder = new TRpcHitF();
-	calFinder -> init(fileHitFinderPar,"/media/Datos2TB/korna/tragaldabas/pars/active_cells_2015_2016.root");
+	calFinder -> init(fileHitFinderPar,"/media/Datos2TB/damian/tragaldabas/soft_TT/GoodActiveCells.root");
 
 	TRpcSaetaF* trackFinder = new TRpcSaetaF();
         trackFinder->init();
@@ -2203,7 +2203,7 @@ Bool_t Unpacker::eventLoopFillCal(Int_t nbEvt, Int_t startEv, TH1D** h1D, TH2D**
 	rawFinder -> init(fileLookupPar);
 
 	TRpcHitF* calFinder = new TRpcHitF();
-	calFinder -> init(fileHitFinderPar,"/media/Datos2TB/damian/tragaldabas/soft_TT/GoodActieCells_2015_2018.root");
+	calFinder -> init(fileHitFinderPar,"/media/Datos2TB/damian/tragaldabas/soft_TT/active_cells_2015_2016.root");
 
 	TRpcSaetaF* trackFinder = new TRpcSaetaF();
 	trackFinder->init();
