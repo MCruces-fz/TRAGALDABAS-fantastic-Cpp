@@ -4,8 +4,40 @@ COMMAND=$1
 FROMDATE=$2
 TODATE=$3
 
-# DIR="/media/Datos2TB/tragaldabas/data/done/alberto/T01T02T03/20150107/done/"
-DIR="/home/mcruces/Documents/fptrucha_hits/root/"
+# HLDDIR="/home/mcruces/Documents/fptrucha_hits/root/"
+HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
+OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
+CALPARS="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt"
+
+function show_help() {
+    echo "To use the run command, arguments [FROM] and [TO] must be:"
+    echo "    Integers"
+    echo "    Dates with the format YYDOYHHMMSS"
+    echo "        YY: Two digits year"
+    echo "        DOY: Three digits Day Of the Year"
+    echo "        HHMMSS: Time HH:MM:SS"
+    echo "They can have the desired length, but starting allways"
+    echo "with the year (YY) and followed by the day of the year (DOY) "
+}
+
+function do_root() {
+    FILENAME=$1
+    
+    echo Analyzing file: $FILENAME
+    
+    cat > unpack.C <<EOF
+{
+Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTDIR", 10000000, "$LUPTAB", "$CALPARS");
+}
+EOF
+    root -l -q unpack.C
+
+    #############
+    # Long Code #
+    #############
+
+}
 
 function run() {
 
@@ -25,22 +57,11 @@ function run() {
 
     for (( date=$FROMDATE; date<=$TODATE; date++))
     do
-        for a in `find $DIR -type f -name tr$date* -print`; 
+        for a in `find $HLDDIR -maxdepth 1 -type f -name tr$date* -print`; 
         do 
-            ./do_unpack.sh `basename $a`;
+            do_root `basename $a`
         done
     done
-}
-
-function show_help() {
-    echo "To use the run command, arguments [FROM] and [TO] must be:"
-    echo "    Integers"
-    echo "    Dates with the format YYDOYHHMMSS"
-    echo "        YY: Two digits year"
-    echo "        DOY: Three digits Day Of the Year"
-    echo "        HHMMSS: Time HH:MM:SS"
-    echo "They can have the desired length, but starting allways"
-    echo "with the year (YY) and followed by the day of the year (DOY) "
 }
 
 case $COMMAND in
