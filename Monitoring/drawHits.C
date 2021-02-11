@@ -1,6 +1,6 @@
 {
     gROOT->SetBatch(kTRUE);
-    TFile *_file0 = TFile::Open("/home/mcruces/Documents/fptrucha_hits/outputs//tr16001001130.hld.root.root");
+    TFile *_file0 = TFile::Open("/media/Datos4TB/people/mcruces/PNGDST/tr16001001130.hld.root.root");
     gStyle->SetOptStat(1000000001);
     TCanvas* can = new TCanvas("can","can",1100,700);
     can->Divide(3,2,0.01,0.01);

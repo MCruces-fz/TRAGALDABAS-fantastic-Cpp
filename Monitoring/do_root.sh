@@ -27,7 +27,7 @@ root -l -q unpack.C
 cat > drawHits.C <<EOF
 {
     gROOT->SetBatch(kTRUE);
-    TFile *_file0 = TFile::Open("$OUTROOT/$FILENAME.root.root");
+    TFile *_file0 = TFile::Open("$OUTROOT$FILENAME.root.root");
     gStyle->SetOptStat(1000000001);
     TCanvas* can = new TCanvas("can","can",1100,700);
     can->Divide(3,2,0.01,0.01);
