@@ -8,11 +8,17 @@ FILENAME=$1
 YYDOY=${FILENAME:2:5}
 
 # fptrucha dirs
-HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
-OUTROOT="/media/Datos4TB/people/mcruces/PNGDST/"
+HLDDIR="/media/Datos2TB/tragaldabas/data/done/" 
+OUTROOT="/media/Datos4TB/people/mcruces/PNGDST/" 
 OUTPNG="/media/Datos4TB/tragaldabas/data/monitor/"
+
+# fptrucha files
 LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
 CALPARS="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt"
+
+# full paths to files
+PNGFILEPATH="$OUTPNG/png/$YYDOY/$FILENAME.png"
+DATFILEPATH="$OUTPNG/png/$YYDOY/rate/$FILENAME.dat"
 
 echo Analyzing file: $FILENAME
 
@@ -22,7 +28,6 @@ Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTROOT", 10000000, "$LUPTA
 }
 EOF
 root -l -q unpack.C
-
 
 cat > drawHits.C <<EOF
 {
@@ -52,9 +57,9 @@ cat > drawHits.C <<EOF
     mT4->SetTitle("$FILENAME;hit multiplicity;events");mT4->SetFillColor(5);
     //mT4->GetXaxis()->SetRangeUser(0.1,250);
     mT4->GetYaxis()->SetRangeUser(1,300000);
-    can->SaveAs("png/$YYDOY/$FILENAME.png");
+    can->SaveAs("$PNGFILEPATH");
     can->SaveAs("tmpShow.pdf");
-    ofstream fs("png/$YYDOY/rate/$FILENAME.dat");
+    ofstream fs("$DATFILEPATH");
     fs << "#T1" << endl;
     for(Int_t i=10;i>0;i--) { 
       for(Int_t j=1;j<13;j++) {
@@ -77,7 +82,7 @@ cat > drawHits.C <<EOF
       fs << endl;
     }
     fs.close();
-    ofstream fs2("png/$YYDOY/rate/$FILENAME.dat");
+    ofstream fs2("$DATFILEPATH");
     fs2 << "#T1" << endl;
     for(Int_t i=1;i<120;i++) fs2 << mT1->GetBinContent(i) << "\t";
     fs2 << "\n#T3" << endl;
