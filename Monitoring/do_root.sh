@@ -7,25 +7,27 @@
 FILENAME=$1
 YYDOY=${FILENAME:2:5}
 
+# fptrucha dirs
+HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
+OUTROOT="/media/Datos4TB/people/mcruces/PNGDST/"
+OUTPNG="/media/Datos4TB/tragaldabas/data/monitor/"
+LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
+CALPARS="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt"
+
 echo Analyzing file: $FILENAME
 
-cat > unpack.swap <<"EOF"
+cat > unpack.C <<EOF
 {
- Unpacker* u = new Unpacker("/media/Datos2TB/tragaldabas/data/done/","XXXXXXXXX","./",10000000,"luptab.txt","2017_day_263_CalPars.txt");
+Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTROOT", 10000000, "$LUPTAB", "$CALPARS");
 }
 EOF
-
-ORDE=`echo s/XXXXXXXXX/$FILENAME/g`
-
-sed "$ORDE" unpack.swap > unpack.C
-rm unpack.swap
-
 root -l -q unpack.C
+
 
 cat > drawHits.C <<EOF
 {
     gROOT->SetBatch(kTRUE);
-    TFile *_file0 = TFile::Open("$FILENAME.root.root");
+    TFile *_file0 = TFile::Open("$OUTROOT/$FILENAME.root.root");
     gStyle->SetOptStat(1000000001);
     TCanvas* can = new TCanvas("can","can",1100,700);
     can->Divide(3,2,0.01,0.01);
@@ -87,14 +89,14 @@ cat > drawHits.C <<EOF
 EOF
 
 
-if ! [ -d  png/$YYDOY/ ];
+if ! [ -d  $OUTPNG/png/$YYDOY/ ];
 then
-mkdir -p png/$YYDOY/rate
+mkdir -p $OUTPNG/png/$YYDOY/rate/
 fi
 
 root -l -q drawHits.C
 
 evince tmpShow.pdf &
 
-rm $FILENAME.root.root
+rm $OUTROOT/$FILENAME.root.root
 

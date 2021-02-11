@@ -4,9 +4,17 @@ COMMAND=$1
 FROMDATE=$2
 TODATE=$3
 
-# HLDDIR="/home/mcruces/Documents/fptrucha_hits/root/"
+# fppercebe dirs
+# HLDDIR="/home/mcruces/Documents/fptrucha_hits/hld/"
+# OUTROOT="/home/mcruces/Documents/fptrucha_hits/outputs/"
+# OUTPNG="/home/mcruces/Documents/fptrucha_hits/outputs/"
+# LUPTAB="/home/mcruces/Documents/GitHub/TRAGALDABAS-fantastic-Cpp/luptabs/luptable_corr_20180423.txt"
+# CALPARS="/home/mcruces/Documents/GitHub/TRAGALDABAS-fantastic-Cpp/CalPars/2020_day_092_CalPars.txt"
+
+# fptrucha dirs
 HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
-OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+OUTROOT="/media/Datos4TB/people/mcruces/PNGDST/"
+OUTPNG="/media/Datos4TB/tragaldabas/data/monitor/"
 LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
 CALPARS="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt"
 
@@ -28,7 +36,7 @@ function do_root() {
     
     cat > unpack.C <<EOF
 {
-Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTDIR", 10000000, "$LUPTAB", "$CALPARS");
+Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTROOT", 10000000, "$LUPTAB", "$CALPARS");
 }
 EOF
     root -l -q unpack.C
@@ -36,6 +44,11 @@ EOF
     #############
     # Long Code #
     #############
+
+
+    if ! [ -d  png/$YYDOY/ ]; then
+        mkdir -p png/$YYDOY/rate
+    fi
 
 }
 
