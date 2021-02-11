@@ -29,23 +29,22 @@ function do_root() {
     
     echo Analyzing file: $FILENAME
     
-    cat > unpack.C <<EOF
+    root -l <<EOF
 {
 Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTROOT", 10000000, "$LUPTAB", "$CALPARS");
 }
 EOF
-    root -l -q unpack.C
 
     YYDOY=${FILENAME:2:5}
 
     # full paths to files
     YYDOYPATH="$OUTPNG/png/$YYDOY/"
-    # PNGFILEPATH="$OUTPNG/png/$YYDOY/${FILENAME}.png"
-    # DATFILEPATH="$OUTPNG/png/$YYDOY/rate/$FILENAME"
-    # DATENTRIESPATH="$OUTPNG/png/$YYDOY/rate/$FILENAME_cell_entries.dat"
-    # DATMULTIPLPATH="$OUTPNG/png/$YYDOY/rate/$FILENAME_plane_mult.dat"
 
-    cat > drawHits.C <<EOF
+    if ! [ -d  $YYDOYPATH ]; then
+        mkdir -p $YYDOYPATH/rate/
+    fi
+
+    root -l <<EOF
 {
     gROOT->SetBatch(kTRUE);
     TFile *_file0 = TFile::Open("$OUTROOT${FILENAME}.root.root");
@@ -108,13 +107,6 @@ EOF
   fs2.close();
   }
 EOF
-
-
-    if ! [ -d  $YYDOYPATH ]; then
-        mkdir -p $YYDOYPATH/rate/
-    fi
-
-    root -l -q drawHits.C
 
     # evince tmpShow.pdf &
 
