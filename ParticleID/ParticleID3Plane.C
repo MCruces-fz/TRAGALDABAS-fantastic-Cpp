@@ -159,7 +159,10 @@ ReturnMIDAS ParticleMIDAS(Float_t Chi2, Float_t AnAlg, Int_t MultTotAlg) {
     return values;
 }
 
-void Saetas3Planes() {
+void Saetas3Planes(char inputFile[120]) {
+
+    // # TRB indices for each detector plane
+    // TRB_TAB = {"T1": 2, "T3": 0, "T4": 1}
 
     // ---   D E C L A R A T I O N S   --- //
     Int_t rpcHitsPerEvent   = 0;
@@ -180,10 +183,13 @@ void Saetas3Planes() {
     Float_t TotMult, a_n = 0;
 
     Float_t Chi2;
+
+    Bool_t sillyPrints = 0;
+    Bool_t outPrints = 1;
     // ----------------------------------- //
 
     // READING TREE
-    char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
+//    char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
     TFile *tFile = TFile::Open(inputFile);
     TTree* tree = (TTree*)tFile->Get("T");
 
@@ -213,7 +219,7 @@ void Saetas3Planes() {
 //    "Chi-Square" << "\t" << "a_n" << "\t" << "M_{Tot}" << "\t" <<
 //    "M1" <<"\t"<< "M2" << "\t" << "M3" << "\t" << "M4" << endl;
 
-    cout << "Number of Events: " << nevents << endl;
+    if (sillyPrints) cout << "Number of Events: " << nevents << endl;
 
     // Defined Counters:
     Int_t n00Id = 0;  // Number of particles with Id = 0
@@ -222,7 +228,7 @@ void Saetas3Planes() {
     //LOOP ON EVENTS
     for (int i = 0; i < nevents; i++) {
 
-        cout << "\n\n@ === EVENT " << i << " === @\n" << endl;
+        if (sillyPrints) cout << "\n\n@ === EVENT " << i << " === @\n" << endl;
 
         tree->GetEvent(i);
         rpcHitsPerEvent = rpcHitCA->GetEntries();
@@ -261,17 +267,17 @@ void Saetas3Planes() {
         a_n = hit1 * 0 + hit3 * 2 + hit4 * 3;
         rpcSaeta = new TRpcSaeta*[rpcSaetaPerEvent];
 
-        cout << "Hits: (" << hit1 << ", " << hit3 << ", " << hit4 << ")" << endl;
-        cout << "   Total multiplicity: " << TotMult << endl;
-        cout << "Weighted multiplicity: " <<     a_n << endl;
+        if (sillyPrints) cout << "Hits: (" << hit1 << ", " << hit3 << ", " << hit4 << ")" << endl;
+        if (sillyPrints) cout << "   Total multiplicity: " << TotMult << endl;
+        if (sillyPrints) cout << "Weighted multiplicity: " <<     a_n << endl;
 
         // Clear saeta variables
         index0 = 0;
         ID = -1;
         bestChi2 = 1000;
 
-        cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
-        cout << "Indices in the TClonesArray:" << endl;
+        if (sillyPrints) cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
+        if (sillyPrints) cout << "Indices in the TClonesArray:" << endl;
 
         // LOOP ON NUMBER OF SAETAS ON EACH EVENT
         for(Int_t j = 0; j < rpcSaetaPerEvent; j++){
@@ -282,10 +288,12 @@ void Saetas3Planes() {
             if (chi2 < bestChi2) bestChi2 = chi2;
 
             // Indices of the hits of the saeta in the TClonesArray
-            cout << "Saeta[" << j << "] -> (" <<
-                 rpcSaeta[j]->getInd(0) << ", " <<
-                 rpcSaeta[j]->getInd(1) << ", " <<
-                 rpcSaeta[j]->getInd(2) << "), chi2 = " << chi2 << endl;
+            if (sillyPrints) {
+            cout << "Saeta[" << j << "] -> (" << rpcSaeta[j]->getInd(2) // T1 -> TRB 2
+                                      << ", " << rpcSaeta[j]->getInd(0) // T3 -> TRB 0
+                                      << ", " << rpcSaeta[j]->getInd(1) // T4 -> TRB 1
+                                      << "), chi2 = " << chi2 << endl; 
+            }
         }
 
         // Getting ParticleMIDAS information
@@ -297,11 +305,16 @@ void Saetas3Planes() {
         P_E_m = values.P_E_m; // Probability of E_m
         P_E_M = values.P_E_M; // Probability of E_M
 
+        if (sillyPrints) {
+        if (ID == 13) cout << "-------------------------------------------------------" << endl;
         cout << "Parameters of ParticleMIDAS: " << bestChi2 << ", " << a_n << ", " << TotMult << endl;
-        cout << "Particle ID: " << ID << ", P(ID) = " << P_ID << ", Chi2(ID) = " << chi2 << endl;
+        cout << "Particle ID: " << ID << ", P(ID) = " << P_ID << ", Chi2(ID) = " << bestChi2 << endl;
+        if (ID == 13) cout << "-------------------------------------------------------" << endl;
+        }
 
-//        if (ID == 13) exit(0);
-//        if (i >= 10) break;
+        if (outPrints) {
+            cout << "RUNID" << "," << i << ","  << ID << "," << P_ID << "," << bestChi2  << "," << hit1 << "," << hit3 << "," << hit4 << endl;
+        }
     }
-    cout << "END without errors!" << endl;
+    if (sillyPrints) cout << "END without errors!" << endl;
 }
