@@ -26,12 +26,13 @@ function do_unpack() {
     
     echo Analyzing file: $FILENAME
     
-    cat > unpack.C <<EOF
+    # cat > unpack.C <<EOF
+    root -l  <<EOF
 {
 Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTDIR", 10000000, "$LUPTAB", "$CALPARS");
 }
 EOF
-    root -l -q unpack.C
+    # root -l -q unpack.C
 }
 
 function run() {
