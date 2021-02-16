@@ -264,6 +264,9 @@ void Saetas3Planes(char inputFile[120]) {
             }
         }
 
+        // Save hits only if they're in all planes:
+        if (hit1 == 0 or hit3 == 0 or hit4 == 0) continue;
+
         a_n = hit1 * 0 + hit3 * 2 + hit4 * 3;
         rpcSaeta = new TRpcSaeta*[rpcSaetaPerEvent];
 

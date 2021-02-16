@@ -4,11 +4,15 @@ COMMAND=$1
 FROMDATE=$2
 TODATE=$3
 
+# TODO: Make histogram with event topology: 111, 222, 333, 211, 121, 112, ...
+
 # fppercebe dirs:
 ROOTDIR="/home/mcruces/Documents/fptrucha_hits/root/"
+OUTDIR="/home/mcruces/Documents/fptrucha_hits/outroot/"
 
 # fptrucha dirs:
 # ROOTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+# OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/outmidas/"
 
 OUTNAME="OUT`date +"%y%j%H%M%S"`.csv"
 WARNNAME="WARN`date +"%y%j%H%M%S"`.txt"
@@ -25,6 +29,7 @@ echo "    ID: Particle identification by MIDAS algorithm."
 echo "    P_ID: Probability of successful ID."
 echo "    chi2: Chi squared."
 echo "    HITST#: Hits in each plane in this event."
+echo
 
 function show_help() {
     echo "To use the run command, arguments [FROM] and [TO] must be:"
@@ -44,7 +49,8 @@ function MIDAS() {
     
     # echo Analyzing file: `basename $FULLNAME`
     
-    root -l <<EOF >> $OUTNAME 2>> $WARNNAME 
+    root -l <<EOF >> $OUTDIR/$OUTNAME 2>> $OUTDIR/$WARNNAME 
+    # root -l <<EOF >> $OUTDIR/$OUTNAME
 {
 .L ParticleID3Plane.C
 Saetas3Planes("$FULLNAME");
@@ -53,6 +59,11 @@ EOF
 }
 
 function run_all() {
+
+    echo
+    echo "Running MIDAS for all root files in $ROOTDIR..."
+    echo
+
     for a in `find $ROOTDIR -maxdepth 1 -type f -name "*.hld.root.root" -print`; 
     do 
         MIDAS $a
@@ -74,6 +85,10 @@ function run() {
         echo "Please: [FROM] < [TO]"
         exit 1
     fi
+
+    echo
+    echo "Running MIDAS for files in $ROOTDIR from $FROMDATE to $TODATE..."
+    echo
 
     for (( date=$FROMDATE; date<=$TODATE; date++))
     do
