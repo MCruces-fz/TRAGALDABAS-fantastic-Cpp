@@ -262,10 +262,9 @@ void Saetas3Planes(char inputFile[120]) {
                     exit(-1);
                 }
             }
+        } else { 
+            continue; // Save hits only if they're in all planes:
         }
-
-        // Save hits only if they're in all planes:
-        if (hit1 == 0 or hit3 == 0 or hit4 == 0) continue;
 
         a_n = hit1 * 0 + hit3 * 2 + hit4 * 3;
         rpcSaeta = new TRpcSaeta*[rpcSaetaPerEvent];
@@ -282,7 +281,11 @@ void Saetas3Planes(char inputFile[120]) {
         if (sillyPrints) cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
         if (sillyPrints) cout << "Indices in the TClonesArray:" << endl;
 
+
         // LOOP ON NUMBER OF SAETAS ON EACH EVENT
+
+        if ( rpcSaetaPerEvent == 0 ) continue;  // Save hits only if there are saetas.
+
         for(Int_t j = 0; j < rpcSaetaPerEvent; j++){
             rpcSaeta[j] = new TRpcSaeta;
             rpcSaeta[j] = (TRpcSaeta*) rpcSaetaCA->At(j);
