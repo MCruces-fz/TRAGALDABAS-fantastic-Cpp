@@ -11,6 +11,8 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <libgen.h>
+#include <stdio.h>
 
 #include "TH1F.h"
 #include "TCanvas.h"
@@ -190,6 +192,7 @@ void Saetas3Planes(char inputFile[120]) {
 
     // READING TREE
 //    char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
+    char *filename = basename(inputFile);
     TFile *tFile = TFile::Open(inputFile);
     TTree* tree = (TTree*)tFile->Get("T");
 
@@ -319,7 +322,7 @@ void Saetas3Planes(char inputFile[120]) {
         }
 
         if (outPrints) {
-            cout << "RUNID" << "," << i << ","  << ID << "," << P_ID << "," << bestChi2  << "," << hit1 << "," << hit3 << "," << hit4 << endl;
+            cout << filename << "," << i << ","  << ID << "," << P_ID << "," << bestChi2  << "," << hit1 << "," << hit3 << "," << hit4 << endl;
         }
     }
     if (sillyPrints) cout << "END without errors!" << endl;
