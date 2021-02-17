@@ -192,7 +192,8 @@ void Saetas3Planes(char inputFile[120]) {
 
     // READING TREE
 //    char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
-    char *filename = basename(inputFile);
+    string fullname = inputFile;
+    string filename = fullname.substr(2,11);
     TFile *tFile = TFile::Open(inputFile);
     TTree* tree = (TTree*)tFile->Get("T");
 
