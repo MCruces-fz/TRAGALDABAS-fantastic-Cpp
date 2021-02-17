@@ -7,12 +7,12 @@ TODATE=$3
 # TODO: Make histogram with event topology: 111, 222, 333, 211, 121, 112, ...
 
 # fppercebe dirs:
-ROOTDIR="/home/mcruces/Documents/fptrucha_hits/root/"
-OUTDIR="/home/mcruces/Documents/fptrucha_hits/outroot/"
+# ROOTDIR="/home/mcruces/Documents/fptrucha_hits/root/"
+# OUTDIR="/home/mcruces/Documents/fptrucha_hits/outroot/"
 
 # fptrucha dirs:
-# ROOTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
-# OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/outmidas/"
+ROOTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/outmidas/"
 
 OUTNAME="OUT`date +"%y%j%H%M%S"`.csv"
 WARNNAME="WARN`date +"%y%j%H%M%S"`.txt"
