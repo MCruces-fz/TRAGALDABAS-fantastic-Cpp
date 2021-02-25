@@ -49,8 +49,8 @@ function MIDAS() {
     
     # echo Analyzing file: `basename $FULLNAME`
     
-    root -l <<EOF >> $OUTDIR/$OUTNAME 2>> $OUTDIR/$WARNNAME 
-    # root -l <<EOF >> $OUTDIR/$OUTNAME
+    # root -l <<EOF >> $OUTDIR/$OUTNAME 2>> $OUTDIR/$WARNNAME 
+    root -l <<EOF >> $OUTDIR/$OUTNAME
 {
 .L ParticleID3Plane.C
 Saetas3Planes("$FULLNAME");

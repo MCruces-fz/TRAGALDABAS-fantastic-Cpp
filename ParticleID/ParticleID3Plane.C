@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <string>
+#include <list>
+#include <vector>
 #include <tuple>
 #include <libgen.h>
 #include <stdio.h>
@@ -184,14 +186,20 @@ void Saetas3Planes(char inputFile[120]) {
     Int_t hit1, hit3, hit4;
     Float_t TotMult, a_n = 0;
 
+    // Bad Cells:
+    Int_t badT1 [20] = {15, 43, 2, 7};
+    Int_t badT3 [20] = {35, 9, 1};
+    Int_t badT4 [20] = {9, 30, 6, 4};
+
     Float_t Chi2;
 
     Bool_t sillyPrints = 0;
+    Bool_t sillyPrints1 = 1;
     Bool_t outPrints = 1;
     // ----------------------------------- //
 
     // READING TREE
-//    char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
+    // char inputFile[120] = "/home/mcruces/Documents/multi_analysis/tr20092001740.hld.root.root";
     char *file0 = basename(inputFile);
     string fullname = file0;
     string filename = fullname.substr(2,11);
@@ -217,13 +225,6 @@ void Saetas3Planes(char inputFile[120]) {
 
     Long64_t nevents = tree->GetEntries();
 
-//    // OUTPUT FILE
-//    fstream OutFile;
-//    OutFile.open("EstudEstad_4planosSinEdificio_M.txt", fstream::out);
-//    OutFile << "Id_PartPrimaria" << "\t" << "Energia_PartPrimaria [GeV]" << "\t" <<
-//    "Chi-Square" << "\t" << "a_n" << "\t" << "M_{Tot}" << "\t" <<
-//    "M1" <<"\t"<< "M2" << "\t" << "M3" << "\t" << "M4" << endl;
-
     if (sillyPrints) cout << "Number of Events: " << nevents << endl;
 
     // Defined Counters:
@@ -233,11 +234,15 @@ void Saetas3Planes(char inputFile[120]) {
     //LOOP ON EVENTS
     for (int i = 0; i < nevents; i++) {
 
-        if (sillyPrints) cout << "\n\n@ === EVENT " << i << " === @\n" << endl;
+        if (sillyPrints1) cout << "\n\n@ === EVENT " << i << " === @\n" << endl;
 
         tree->GetEvent(i);
         rpcHitsPerEvent = rpcHitCA->GetEntries();
         rpcSaetaPerEvent = rpcSaetaCA->GetEntries();
+
+        // list of indices to "delete"
+        list<Int_t> indK;
+        list<int>::iterator it;
 
         // Clear multiplicity variables
         hit1=0, hit3=0, hit4=0;
@@ -252,15 +257,36 @@ void Saetas3Planes(char inputFile[120]) {
                 rpcHit[k] = new TRpcHit;
                 rpcHit[k] = (TRpcHit*) rpcHitCA->At(k);
 
-                TotMult++;
                 Float_t Z0 = rpcHit[k]->getZ(); // FIXME: Loading twice fails!!
+                Int_t cell = rpcHit[k]->getCell();
 
                 if(Z0 == heightT1) {
                     hit1++; // Plane T1
+                    for (int c = 0; c < 20; c++) {
+                        if (cell == badT1[c]) {
+                            indK.push_back(cell);
+                            hit1--;
+                            cout << "Not accepted " << cell << endl;
+                        }
+                    }
                 } else if (Z0 == heightT3) {
                     hit3++; // Plane T3
+                    for (int c = 0; c < 20; c++) {
+                        if (cell == badT3[c]) {
+                            indK.push_back(cell);
+                            hit3--;
+                            cout << "Not accepted " << cell << endl;
+                        }
+                    }
                 } else if (Z0 == heightT4) {
                     hit4++; // Plane T4
+                    for (int c = 0; c < 20; c++) {
+                        if (cell == badT4[c]) {
+                            indK.push_back(cell);
+                            hit4--;
+                            cout << "Not accepted " << cell << endl;
+                        }
+                    }
                 } else {
                     cout << "Planes at: " << heightT1 << " mm, " << heightT3  << " mm, " << heightT4  << " mm" << endl;
                     cout << "Current height: " << Z0 << endl;
@@ -271,41 +297,65 @@ void Saetas3Planes(char inputFile[120]) {
             continue; // Save hits only if they're in all planes:
         }
 
+        if (sillyPrints1) {
+            cout << "mylist contains:";
+            for (it=indK.begin(); it!=indK.end(); ++it) cout << ' ' << *it;
+            cout << '\n';
+        }
+
+
         a_n = hit1 * 0 + hit3 * 2 + hit4 * 3;
+        TotMult = hit1 + hit3 + hit4;
         rpcSaeta = new TRpcSaeta*[rpcSaetaPerEvent];
 
-        if (sillyPrints) cout << "Hits: (" << hit1 << ", " << hit3 << ", " << hit4 << ")" << endl;
-        if (sillyPrints) cout << "   Total multiplicity: " << TotMult << endl;
-        if (sillyPrints) cout << "Weighted multiplicity: " <<     a_n << endl;
+        if (sillyPrints1) cout << "Hits: (" << hit1 << ", " << hit3 << ", " << hit4 << ")" << endl;
+        if (sillyPrints1) cout << "   Total multiplicity: " << TotMult << endl;
+        if (sillyPrints1) cout << "Weighted multiplicity: " <<     a_n << endl;
 
         // Clear saeta variables
         index0 = 0;
         ID = -1;
         bestChi2 = 1000;
 
-        if (sillyPrints) cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
         if (sillyPrints) cout << "Indices in the TClonesArray:" << endl;
 
+        if (sillyPrints1) cout << "\nNumber of Saetas before: " << rpcSaetaPerEvent << endl;
 
         // LOOP ON NUMBER OF SAETAS ON EACH EVENT
-
-        if ( rpcSaetaPerEvent == 0 ) continue;  // Save hits only if there are saetas.
 
         for(Int_t j = 0; j < rpcSaetaPerEvent; j++){
             rpcSaeta[j] = new TRpcSaeta;
             rpcSaeta[j] = (TRpcSaeta*) rpcSaetaCA->At(j);
 
             chi2 = rpcSaeta[j]->getChi2();
+
+            Int_t sindT1 = rpcSaeta[j]->getInd(2);
+            Int_t sindT3 = rpcSaeta[j]->getInd(0);
+            Int_t sindT4 = rpcSaeta[j]->getInd(1);
+
+            for (it=indK.begin(); it!=indK.end(); ++it) {
+                cout << "Iterator: " << *it << endl;
+                if (sindT1 == *it or sindT3 == *it or sindT4 == *it){
+                    chi2 = 99999;
+                    rpcSaetaPerEvent--;
+                    cout << "Saeta deleted with " << *it << endl;
+                }
+            }
+
             if (chi2 < bestChi2) bestChi2 = chi2;
 
             // Indices of the hits of the saeta in the TClonesArray
-            if (sillyPrints) {
-            cout << "Saeta[" << j << "] -> (" << rpcSaeta[j]->getInd(2) // T1 -> TRB 2
-                                      << ", " << rpcSaeta[j]->getInd(0) // T3 -> TRB 0
-                                      << ", " << rpcSaeta[j]->getInd(1) // T4 -> TRB 1
+            if (sillyPrints1) {
+            cout << "Saeta[" << j << "] -> (" << sindT1 // T1 -> TRB 2
+                                      << ", " << sindT3 // T3 -> TRB 0
+                                      << ", " << sindT4 // T4 -> TRB 1
                                       << "), chi2 = " << chi2 << endl; 
             }
         }
+
+        if (sillyPrints1) cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
+
+        if ( rpcSaetaPerEvent == 0 ) continue;  // Save hits only if there are saetas.
 
         // Getting ParticleMIDAS information
         values = ParticleMIDAS(bestChi2, a_n, TotMult);
@@ -323,9 +373,12 @@ void Saetas3Planes(char inputFile[120]) {
         if (ID == 13) cout << "-------------------------------------------------------" << endl;
         }
 
+
         if (outPrints) {
             cout << filename << "," << i << ","  << ID << "," << P_ID << "," << bestChi2  << "," << hit1 << "," << hit3 << "," << hit4 << endl;
         }
+
+        if (i > 25) exit(0);
     }
     if (sillyPrints) cout << "END without errors!" << endl;
 }

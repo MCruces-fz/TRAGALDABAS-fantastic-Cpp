@@ -10,7 +10,9 @@
 // Global constants: statistical weigth of the measured variables.
 // // w=1/sigma^2
 // // Distances in mm, time in ns 
-Float_t wx=11.0*sqrt(2), wy=12.0*sqrt(2), wt=0.3;
+// Float_t wx=11.0*sqrt(2), wy=12.0*sqrt(2), wt=0.3;
+//Float_t wx=116*sqrt(2), wy=111*sqrt(2), wt=0.3;
+Float_t wx=11.6/sqrt(12), wy=11.1/sqrt(12), wt=0.3;
 
 Double_t vc = 299.792458;
 
@@ -211,7 +213,7 @@ Int_t TRpcSaetaF::execute() {
 				//cout<<time<<" "<<time2<<" "<<dist/300.<<endl;
 				if(trbnum==0 && trbnum2==1 && trbnum3==2) {
 					//cout << "PARECE QUE BIEN " << fabs(time-time3-dist/300.) << " "<< time3<< " "<< time<< endl;
-					//if( fabs(time-time3-dist/300.)>0.9) continue;
+					//if(fabs(time-time3-dist/300.)>0.9) continue;
 					// Input Saeta2
 					SInit = InputSaeta2Planes(x3,y3,time3,z3, x2,y2,time2,z2);
 					// Convergence loop
@@ -265,7 +267,7 @@ Int_t TRpcSaetaF::execute() {
 						Double_t yteo = y0+yP*zpos[ich]; 
 						Double_t tteo = t0+1./ga*zpos[ich]*sl; 
 
-						//1cout<<" plano "<<ich<<" chx "<<(xteo-xpos[ich])*(xteo-xpos[ich])/wx/wx<<" chy "<<(yteo-ypos[ich])*(yteo-ypos[ich])/wy/wy<<" cht "<<(tteo-tpos[ich])*(tteo-tpos[ich])/wt/wt<<endl;
+						//cout<<" plano "<<ich<<" chx "<<(xteo-xpos[ich])*(xteo-xpos[ich])/wx/wx<<" chy "<<(yteo-ypos[ich])*(yteo-ypos[ich])/wy/wy<<" cht "<<(tteo-tpos[ich])*(tteo-tpos[ich])/wt/wt<<endl;
 					//	cout<<" x "<<xteo<<" "<<xpos[ich]<<" y "<<yteo<<" "<<ypos[ich]<<" t "<<tteo<<" "<<tpos[ich]<<endl;
 						chi2full += (xteo-xpos[ich])*(xteo-xpos[ich])/wx/wx;
 						chi2full += (yteo-ypos[ich])*(yteo-ypos[ich])/wy/wy;

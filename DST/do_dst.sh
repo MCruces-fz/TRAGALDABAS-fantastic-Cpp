@@ -8,7 +8,8 @@ TODATE=$3
 HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
 OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
 LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
-CALPARS="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt"
+# PARSDIR="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt" # Mine
+PARSDIR="/media/Datos2TB/damian/tragaldabas/2020DST/pars/" # Damian
 
 function show_help() {
     echo "To use the run command, arguments [FROM] and [TO] must be:"
@@ -23,13 +24,15 @@ function show_help() {
 
 function do_unpack() {
     FILENAME=$1
+    YY=${FILENAME:2:2}
+    DOY=${FILENAME:4:3}
     
     echo Analyzing file: $FILENAME
     
     # cat > unpack.C <<EOF
     root -l  <<EOF
 {
-Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTDIR", 10000000, "$LUPTAB", "$CALPARS");
+Unpacker* u = new Unpacker("$HLDDIR", "$FILENAME", "$OUTDIR", 10000000, "$LUPTAB", "$PARSDIR/20${YY}_day_${DOY}_CalPars.txt");
 }
 EOF
     # root -l -q unpack.C
