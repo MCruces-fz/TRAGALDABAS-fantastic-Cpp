@@ -16,6 +16,7 @@
 #include <libgen.h>
 #include <stdio.h>
 
+#include "csv.h"
 #include "TH1F.h"
 #include "TCanvas.h"
 #include "TPad.h"
@@ -163,7 +164,7 @@ ReturnMIDAS ParticleMIDAS(Float_t Chi2, Float_t AnAlg, Int_t MultTotAlg) {
     return values;
 }
 
-void Saetas3Planes(char inputFile[120]) {
+void Saetas3Planes(char inputFile[120], char badCellsFile[120]) {
 
     // # TRB indices for each detector plane
     // TRB_TAB = {"T1": 2, "T3": 0, "T4": 1}
@@ -187,14 +188,36 @@ void Saetas3Planes(char inputFile[120]) {
     Float_t TotMult, a_n = 0;
 
     // Bad Cells:
-    Int_t badT1 [20] = {15, 43, 2, 7};
-    Int_t badT3 [20] = {35, 9, 1};
-    Int_t badT4 [20] = {9, 30, 6, 4};
+    // Int_t badT1 [20] = {15, 43, 2, 7};
+    // Int_t badT3 [20] = {35, 9, 1};
+    // Int_t badT4 [20] = {9, 30, 6, 4};
+    Int_t badT1 [20] = {[0 ... 19] = -1};
+    Int_t badT3 [20] = {[0 ... 19] = -1};
+    Int_t badT4 [20] = {[0 ... 19] = -1};
+
+    // list<Int_t> badT1, badT3, badT4;
+    
+    io::CSVReader<3> in(badCellsFile);
+    in.read_header(io::ignore_extra_column, "T1", "T3", "T4");
+    Int_t bc1, bc3, bc4;
+    Int_t iter = 0;
+    while(in.read_row(bc1, bc3, bc4)){
+        // cout << "T1: " << bc1 << "; T3: " << bc3 << "; T4: " << bc4 << endl;
+        // if (bc1 != -1) badT1.push_back(bc1);
+        // if (bc3 != -1) badT3.push_back(bc3);
+        // if (bc4 != -1) badT4.push_back(bc4);
+        badT1[iter] = bc1;
+        badT3[iter] = bc3;
+        badT4[iter] = bc4;
+
+        iter++;
+    }
+    
 
     Float_t Chi2;
 
     Bool_t sillyPrints = 0;
-    Bool_t sillyPrints1 = 1;
+    Bool_t sillyPrints1 = 0;
     Bool_t outPrints = 1;
     // ----------------------------------- //
 
@@ -264,27 +287,27 @@ void Saetas3Planes(char inputFile[120]) {
                     hit1++; // Plane T1
                     for (int c = 0; c < 20; c++) {
                         if (cell == badT1[c]) {
-                            indK.push_back(cell);
+                            indK.push_back(k);
                             hit1--;
-                            cout << "Not accepted " << cell << endl;
+                            if (sillyPrints1) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
                         }
                     }
                 } else if (Z0 == heightT3) {
                     hit3++; // Plane T3
                     for (int c = 0; c < 20; c++) {
                         if (cell == badT3[c]) {
-                            indK.push_back(cell);
+                            indK.push_back(k);
                             hit3--;
-                            cout << "Not accepted " << cell << endl;
+                            if (sillyPrints1) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
                         }
                     }
                 } else if (Z0 == heightT4) {
                     hit4++; // Plane T4
                     for (int c = 0; c < 20; c++) {
                         if (cell == badT4[c]) {
-                            indK.push_back(cell);
+                            indK.push_back(k);
                             hit4--;
-                            cout << "Not accepted " << cell << endl;
+                            if (sillyPrints1) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
                         }
                     }
                 } else {
@@ -333,14 +356,17 @@ void Saetas3Planes(char inputFile[120]) {
             Int_t sindT3 = rpcSaeta[j]->getInd(0);
             Int_t sindT4 = rpcSaeta[j]->getInd(1);
 
+            Bool_t delSaeta = 0;
             for (it=indK.begin(); it!=indK.end(); ++it) {
-                cout << "Iterator: " << *it << endl;
+                if (sillyPrints1) cout << "Iterator: " << *it << endl;
                 if (sindT1 == *it or sindT3 == *it or sindT4 == *it){
                     chi2 = 99999;
-                    rpcSaetaPerEvent--;
-                    cout << "Saeta deleted with " << *it << endl;
+                    delSaeta = 1;
+                    if (sillyPrints1) cout << "Saeta deleted with " << *it << endl;
                 }
             }
+
+            if (delSaeta == 1) rpcSaetaPerEvent--;
 
             if (chi2 < bestChi2) bestChi2 = chi2;
 
@@ -355,7 +381,7 @@ void Saetas3Planes(char inputFile[120]) {
 
         if (sillyPrints1) cout << "\nNumber of Saetas: " << rpcSaetaPerEvent << endl;
 
-        if ( rpcSaetaPerEvent == 0 ) continue;  // Save hits only if there are saetas.
+        if ( rpcSaetaPerEvent == 0 or bestChi2 >= 1000 ) continue;  // Save hits only if there are saetas.
 
         // Getting ParticleMIDAS information
         values = ParticleMIDAS(bestChi2, a_n, TotMult);
@@ -378,7 +404,7 @@ void Saetas3Planes(char inputFile[120]) {
             cout << filename << "," << i << ","  << ID << "," << P_ID << "," << bestChi2  << "," << hit1 << "," << hit3 << "," << hit4 << endl;
         }
 
-        if (i > 25) exit(0);
+        // if (i > 25) exit(0);
     }
     if (sillyPrints) cout << "END without errors!" << endl;
 }

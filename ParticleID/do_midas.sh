@@ -13,6 +13,7 @@ TODATE=$3
 # fptrucha dirs:
 ROOTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
 OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/outmidas/"
+BADCELLSDIR="/media/Datos4TB/people/mcruces/GitHub/TRAGALDABAS-fantastic-Cpp/BadCells/"
 
 OUTNAME="OUT`date +"%y%j%H%M%S"`.csv"
 WARNNAME="WARN`date +"%y%j%H%M%S"`.txt"
@@ -46,14 +47,16 @@ function show_help() {
 
 function MIDAS() {
     FULLNAME=$1
+    BSNAME=`basename $FULLNAME`
+    YYDOY=${BSNAME:2:5}
     
-    # echo Analyzing file: `basename $FULLNAME`
+    # echo Analyzing file: $BSNAME
     
     # root -l <<EOF >> $OUTDIR/$OUTNAME 2>> $OUTDIR/$WARNNAME 
-    root -l <<EOF >> $OUTDIR/$OUTNAME
+    root -l <<EOF >> $OUTDIR/$OUTNAME 2> /dev/null
 {
 .L ParticleID3Plane.C
-Saetas3Planes("$FULLNAME");
+Saetas3Planes("$FULLNAME", "$BADCELLSDIR/bad_cells_${YYDOY}.csv");
 }
 EOF
 }
