@@ -45,7 +45,7 @@ def getstuff(filename: str, out: str ='list', header: bool = False):
     Given a CSV file, it returns a generator with its rows as lists
 
     :param filename: Full path to the CSV file.
-    :param out: (optional) Kind of yield return [list, int]
+    :param out: (optional) Kind of yield return [list, int, chi2]
     :param header: (optional) If the file has header, skip it.
     :return: Generator of the rows as defined in out parameter.
     """
@@ -61,6 +61,8 @@ def getstuff(filename: str, out: str ='list', header: bool = False):
                 yield [int(row[5]), int(row[6]), int(row[7])]
             elif out == 'int':
                 yield 1e6 * int(row[5]) + 1e3 * int(row[6]) + int(row[7])
+            elif out == "chi2":
+                yield float(row[4])
             else:
                 yield row
 
@@ -112,27 +114,57 @@ if save_text:
     with open(f"{OUT_DIR}/histos_small{file_path[-15:-4]}.txt", "w+") as outf:
         outxt = ""
         outxt += "\nEqual values (M1 == M3 == M4):\n"
-        outxt += crappyhist(equal)
+        outxt += crappyhist(equal, logscale=True)
         outxt += "\n\n\nAll values (M1, M3, M4 < 5):\n"
-        outxt += crappyhist(minor)
+        outxt += crappyhist(minor, logscale=True)
         outf.write(outxt)
 
+save_png = False
+if save_png:
+    stuff = fill_histo(file_path, cond=0)
+    hits = stuff.keys()
+    counts = stuff.values()
+    
+    plt.figure(0)
+    plt.title("All saetas")
+    plt.bar(hits, counts)
+    plt.xlabel('Multiplicity (M1*1e6 + M3*1e3 + M4)')
+    plt.ylabel('Counts')
+    plt.yscale('log')
+    
+    plt.savefig(f"{OUT_DIR}/histos{file_path[-15:-4]}_log.png")
+    
+    plt.xscale('log')
+    plt.savefig(f"{OUT_DIR}/histos{file_path[-15:-4]}_loglog.png")
+    
+    plt.close('all')
 
-stuff = fill_histo(file_path, cond=0)
-hits = stuff.keys()
-counts = stuff.values()
+chi_histo = True
+if chi_histo:
 
-plt.figure(0)
-plt.title("All saetas")
-plt.bar(hits, counts)
-plt.xlabel('Multiplicity (M1*1e6 + M3*1e3 + M4)')
-plt.ylabel('Counts')
-plt.yscale('log')
+    # plt.figure(0)
+    # plt.title("Chi squared (20 bins)")
+    # plt.hist([chi2 for chi2 in getstuff(file_path, out='chi2')], bins=20)
+    # plt.xlabel('Chi squared')
+    # plt.ylabel('Counts')
+    # plt.savefig(f"{OUT_DIR}/chisto_20bins.png")
 
-plt.savefig(f"{OUT_DIR}/histos{file_path[-15:-4]}_log.png")
+    plt.figure(1)
+    plt.title("Chi squared > 30 (50 bins)")
+    plt.hist([chi2 for chi2 in getstuff(file_path, out='chi2') if chi2 < 30], bins=50)
+    plt.xlabel('Chi squared')
+    plt.ylabel('Counts')
+    plt.grid(True)
+    plt.savefig(f"{OUT_DIR}/chisto_lessthan30_50bins.png")
+    
+    plt.figure(2)
+    plt.title("Chi squared (100 bins)")
+    plt.hist([chi2 for chi2 in getstuff(file_path, out='chi2')], bins=100)
+    plt.xlabel('Chi squared')
+    plt.ylabel('Counts')
+    plt.savefig(f"{OUT_DIR}/chisto_100bins.png")
+    
+    # plt.xscale('log')
+    # plt.close('all')
 
-plt.xscale('log')
-plt.savefig(f"{OUT_DIR}/histos{file_path[-15:-4]}_loglog.png")
-
-plt.close('all')
-
+    # plt.show()
