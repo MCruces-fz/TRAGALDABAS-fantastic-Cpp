@@ -18,6 +18,9 @@ void EventTopology() {
     // --> Root file
     string root_filename = "tr20259084207.hld.root.root";
 
+    // Loop variables:
+    Int_t nhits, nsaetas;
+
     // Full Paths:
     // --> Bad cells
     string bc_fulll_path = c_bc_dir + bc_filename;
@@ -30,20 +33,13 @@ void EventTopology() {
 
     // Read TFile:
     // (It needs a char as input)
-    int lenPath = root_full_path.length();
-    char root_char_path[lenPath + 1];
+    int path_len = root_full_path.length();
+    char root_char_path[path_len + 1];
     strcpy(root_char_path, root_full_path.c_str());
     TFile* t_file = new TFile(root_char_path, "READ");
 
     // Read TTree:
     TTree* tree  = (TTree*) t_file -> Get("T");
-
-    // Get MIDAS values
-    ReturnMIDAS values = particle_midas(5.67, 5, 3);
-    cout << "ID: " << values.id << ", Hello " << c_z0_plane[0] << endl;
-
-    Long64_t nevents = tree->GetEntries();
-    cout << "Number of events: " << nevents << endl;
 
     //--  Reading TClonesArrays -------------------------------------
     //----  Hits
@@ -51,9 +47,9 @@ void EventTopology() {
     hits_carray = new TClonesArray("TRpcHit");  // Defined TClonesArray of TRpcHit objects
 
     TBranch *branch_rpchit = tree -> GetBranch("rpchit");  // Defined rpchit branch as pointer
-    branch_rpchit -> SetAddress(&hits_carray); // Set TRpcHit objects of rpchit for hits_carray TClonesArray
+    branch_rpchit -> SetAddress(&hits_carray); // Set TRpcHit objects of rpchit branch for hits_carray TClonesArray
 
-    TRpcHit** rpc_hit;  // Declared instance of TRpcHit class
+    TRpcHit** rpc_hit;  // Declared instance of TRpcHit class (I'll use it later)
 
     //----  Saetas
     TClonesArray* saetas_carray;
@@ -65,6 +61,22 @@ void EventTopology() {
     TRpcSaeta** rpc_saeta;
     //----------------------------------------------------------------
 
+    // Get MIDAS values
+    ReturnMIDAS values = particle_midas(5.67, 5, 3);
+    cout << "ID: " << values.id << ", Hello " << c_z0_plane[0] << endl;
+
+    Long64_t nevents = tree->GetEntries();
+    cout << "Number of events: " << nevents << endl;
+
+    for (int ievt = 0; ievt < nevents; ievt++) {
+
+        tree -> GetEvent(ievt);
+        nhits = hits_carray -> GetEntries();
+        nsaetas = saetas_carray -> GetEntries();
+        
+        if (nsaetas == 0) continue;
+        cout << "In event " << ievt << "; " << nsaetas << " saetas, " << nhits << " hits." << endl;
+    }
 }
 
 
