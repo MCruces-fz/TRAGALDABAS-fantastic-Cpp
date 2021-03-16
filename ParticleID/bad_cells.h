@@ -1,13 +1,13 @@
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#ifndef BADCELLS_H
+#define BADCELLS_H
 
 
 #include <list>
 
-#include "../Utils/Const.h"
-#include "../Utils/csv.h"
+#include "../utils/constants.h"
+#include "../utils/csv.h"
 
-using namespace std;
+// using namespace std;
 
 struct ReturnBC {
     /*
