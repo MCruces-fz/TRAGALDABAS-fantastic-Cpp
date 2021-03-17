@@ -106,8 +106,10 @@ ReturnMIDAS particle_midas(Float_t Chi2, Float_t AnAlg, Int_t MultTotAlg) {
             P_Id_Min = 0.0002;
             P_Id_Max = 0.999;
         }else if (AnAlg == 5) {
-            Id       = 11;
-            P_Id     = 0.4266;
+            // Id       = 11;
+            // P_Id     = 0.4266;
+            Id       = 13;
+            P_Id     = 0.57300;
             E_min    = 0.0178;
             E_max    = 5;
             P_Id_Min = 0.0054;

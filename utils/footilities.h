@@ -3,6 +3,9 @@
 
 #include <list> // ind_k and iterator
 
+#include "../ParticleID/bad_cells.h"
+#include "constants.h"
+
 // using namespace std;
 
 Int_t c_constant =12;
@@ -20,12 +23,21 @@ struct TrbID {
 };
 
 
+// Int_t [2] to_col_row(Int_t cell) {
+//     return cell % c_ncol, cell / c_ncol + 1;
+// }
+
+Int_t to_cell(Int_t col, Int_t row) {
+    return c_ncol * (row - 1) + col;
+}
+
+
 struct HitsPerPlane {
     Int_t T1, T3, T4;
     list<int> ind_k;
 };
 
-HitsPerPlane hits_topology(TClonesArray* hits_carray, TRpcHit** hit) {
+HitsPerPlane hits_topology(TClonesArray* hits_carray, TRpcHit** hit, ReturnBC bc) {
 
     Int_t nhits = hits_carray -> GetEntries();
     hit = new TRpcHit*[nhits];
@@ -41,19 +53,38 @@ HitsPerPlane hits_topology(TClonesArray* hits_carray, TRpcHit** hit) {
         hit[k] = new TRpcHit;
         hit[k] = (TRpcHit*) hits_carray -> At(k);
 
-        cout << "Trbnum: " << hit[k] -> getTrbnum() << endl;
-
         Int_t trb_num = hit[k] -> getTrbnum();
+        Int_t cell = hit[k]->getCell();
+
+        if (silly_prints) cout << "Trbnum: " << hit[k] -> getTrbnum() << ", cell: " << cell << endl;
 
         if (trb_num == trb_id.T1) {
             hits1++;
-            ind_k.push_back(0);
+            for (int c = 0; c < 20; c++) {
+                if (cell == bc.T1[c]) {
+                    ind_k.push_back(k);
+                    hits1--;
+                    if (silly_prints) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
+                }
+            }
         } else if (trb_num == trb_id.T3) {
             hits3++;
-            ind_k.push_back(0);
+            for (int c = 0; c < 20; c++) {
+                if (cell == bc.T3[c]) {
+                    ind_k.push_back(k);
+                    hits3--;
+                    if (silly_prints) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
+                }
+            }
         } else if (trb_num == trb_id.T4) {
             hits4++;
-            ind_k.push_back(0);
+            for (int c = 0; c < 20; c++) {
+                if (cell == bc.T4[c]) {
+                    ind_k.push_back(k);
+                    hits4--;
+                    if (silly_prints) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
+                }
+            }
         }
 
     }
@@ -89,7 +120,7 @@ SaetasData saetas_counter(TClonesArray* saetas_carray, TRpcSaeta** saeta, list<I
 
         chi_2 = saeta[k] -> getChi2();
 
-        cout << "Chi2: " << chi_2 << endl;
+        if (silly_prints) cout << "Chi2: " << chi_2 << endl;
 
         Int_t sindT1 = saeta[k] -> getInd(2);
         Int_t sindT3 = saeta[k] -> getInd(0);
@@ -98,18 +129,17 @@ SaetasData saetas_counter(TClonesArray* saetas_carray, TRpcSaeta** saeta, list<I
         del_saeta = 0;
 
         for (it=ind_k.begin(); it!=ind_k.end(); ++it) {
-            cout << "Iterator: " << *it << endl;
+            if (silly_prints) cout << "Iterator: " << *it << endl;
             if (sindT1 == *it or sindT3 == *it or sindT4 == *it){
                 chi_2 = 99999;
                 del_saeta = 1;
-                cout << "Saeta deleted with " << *it << endl;
+                if (silly_prints) cout << "Saeta deleted with " << *it << endl;
             }
         }
 
+        if (del_saeta == 1) nsaetas--;
+        if (chi_2 < best_chi2) best_chi2 = chi_2;
     }
-    if (del_saeta == 1) nsaetas--;
-
-    if (chi_2 < best_chi2) best_chi2 = chi_2;
 
 
     SaetasData values = {nsaetas, best_chi2};

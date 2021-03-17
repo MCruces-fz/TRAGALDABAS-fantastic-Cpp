@@ -11,7 +11,11 @@ string c_root_dir = "/home/mcruces/Documents/fptrucha_hits/root/";
 Float_t heightT1 = 1826, heightT2 = 1304, heightT3 = 924, heightT4 = 87;
 Int_t c_z0_plane [4] = {1826, 1304, 924, 87};  // T1, T2, T3, T4
 
-Bool_t sillyPrints = 1;
-Bool_t sillyPrints1 = 1;
+// Number of columns and rows
+Int_t c_ncol = 12;
+Int_t c_nrow = 10;
+
+Bool_t silly_prints = 1;
+Bool_t out_prints = 0;
 
 #endif 

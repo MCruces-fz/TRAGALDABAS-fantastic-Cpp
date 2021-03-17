@@ -13,6 +13,9 @@ Event** event;  // Event class
 TRpcHit** rpc_hit;  // Hit class
 TRpcSaeta** rpc_saeta;  // Saeta class
 
+list<int>::iterator it;
+Int_t weighted_mult;
+
 
 void event_topology() {
 
@@ -25,7 +28,7 @@ void event_topology() {
     // --> Bad cells
     string bc_filename = "bad_cells_" + yydoy + ".csv";
     // --> Root file
-    string root_filename = "tr20259084207.hld.root.root";
+    string root_filename = "tr20263112419.hld.root.root";
 
     // Loop variables:
     Int_t nhits, nsaetas;
@@ -40,7 +43,7 @@ void event_topology() {
     //--  Read Bad Cells  ------------------------------------------
 
     ReturnBC bad_cells = read_bad_cells(bc_fulll_path);
-    cout << "Bad cells of 20270: " << bad_cells.T1[0] << endl;
+    if (silly_prints) cout << "Bad cells of 20270: " << bad_cells.T1[0] << endl;
 
     //--  Read TFile  ----------------------------------------------
 
@@ -80,8 +83,10 @@ void event_topology() {
     //----------------------------------------------------------------
 
     Long64_t nevents = tree->GetEntries();
-    cout << "Number of events: " << nevents << c_constant << endl;
+    if (silly_prints) cout << "Number of events: " << nevents << c_constant << endl;
 
+    Int_t nmuons = 0;
+    Int_t nevt_passed = 0;
     for (int ievt = 0; ievt < nevents; ievt++) {
 
         tree -> GetEvent(ievt);
@@ -89,23 +94,42 @@ void event_topology() {
         nsaetas = saetas_carray -> GetEntries();
         
         if (nsaetas == 0) continue;
-        cout << "In event " << ievt << "; " << nsaetas << " saetas, " << nhits << " hits." << endl;
 
         HitsPerPlane hitspp;
-        hitspp = hits_topology(hits_carray, rpc_hit);
-        cout << "Hits per plane: " << hitspp.T1 << ", " << hitspp.T3 << ", " << hitspp.T4 << endl;
+        hitspp = hits_topology(hits_carray, rpc_hit, bad_cells);
+        weighted_mult = 2 * hitspp.T3 + 3 * hitspp.T4;  // Weighted multiplicity
 
         SaetasData saetad;
         saetad = saetas_counter(saetas_carray, rpc_saeta, hitspp.ind_k);
-        cout << saetad.number << " Saetas, with best Chi2: " << saetad.chi_2 << endl;
+
+        if (saetad.chi_2 >= 100) continue;
 
         // Get MIDAS values
-        ReturnMIDAS values = particle_midas(5.67, 5, 3);
-        cout << "ID: " << values.id << ", Hello " << c_z0_plane[0] << endl;
+        ReturnMIDAS midas = particle_midas(saetad.chi_2, weighted_mult, nhits);
 
-        cout << "\n\n" << endl;
-        cout << "\n\n" << endl;
+        if (silly_prints) {
+            cout << "Hits per plane: " << hitspp.T1 << ", " << hitspp.T3 << ", " << hitspp.T4 << endl;
+            cout << "mylist contains:";
+            for (it=hitspp.ind_k.begin(); it!=hitspp.ind_k.end(); ++it) cout << ' ' << *it;
+            cout << '\n';
+            cout << saetad.number << " Saetas, with best Chi2: " << saetad.chi_2 << endl;
+            cout << "ID: " << midas.id << ", Hello " << c_z0_plane[0] << endl;
+            if (midas.id == 13) cout << "-------------------------------------------------------" << endl;
+            cout << "Parameters of ParticleMIDAS: " << saetad.chi_2 << ", " << weighted_mult << ", " << nhits << endl;
+            cout << "Particle ID: " << midas.id << ", P(ID) = " << midas.p_id << ", Chi2(ID) = " << saetad.chi_2 << endl;
+            if (midas.id == 13) cout << "-------------------------------------------------------" << endl;
+            cout << "\n\n" << endl;
+        }
+
+        if (out_prints) {
+            cout << "tryydoyhhmmss" << "," << ievt << ","  << midas.id << "," << midas.p_id << "," << saetad.chi_2 << "," << hitspp.T1 << "," << hitspp.T3 << "," << hitspp.T4 << endl;
+        }
+
+        if (midas.id == 13) nmuons++;
+        nevt_passed++;
     }
+
+    cout << "Number of events passed: " << nevt_passed << ", muons: " << nmuons << endl;
 }
 
 

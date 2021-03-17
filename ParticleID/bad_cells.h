@@ -51,7 +51,7 @@ list<Int_t> isBadCell(Int_t cell, int k) {
         if (cell == badCells.T1[c]) {
             indK.push_back(k);
             // indK.push_back(k);
-            if (sillyPrints1) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
+            if (silly_prints) cout << "Cell " << cell << " is wrong, k index: " << k << endl;
         }
     }
     return indK;
