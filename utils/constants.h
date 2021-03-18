@@ -15,7 +15,7 @@ Int_t c_z0_plane [4] = {1826, 1304, 924, 87};  // T1, T2, T3, T4
 Int_t c_ncol = 12;
 Int_t c_nrow = 10;
 
-Bool_t silly_prints = 1;
-Bool_t out_prints = 0;
+Bool_t silly_prints = 0;
+Bool_t out_prints   = 1;
 
 #endif 

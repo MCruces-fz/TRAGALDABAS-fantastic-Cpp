@@ -1,4 +1,14 @@
 
+// -------------------------------------------------- //
+//       -------   H O W   T O   U S E   -------      //
+//                                                    //
+//           $ root                                   //
+//           root [0] .L event_topology.C             //
+//           root [1] main()                          //
+//                                                    //
+// -------------------------------------------------- //
+
+
 #include "MIDAS.C"
 #include "bad_cells.h"
 #include "../utils/constants.h"
@@ -53,6 +63,11 @@ void event_topology() {
     strcpy(root_char_path, root_full_path.c_str());
 
     TFile* t_file = new TFile(root_char_path, "READ");
+
+    // Take filename_id
+    char *file0 = basename(root_char_path);
+    string root_full_name = file0;
+    string filename_id = root_full_name.substr(2,11);
 
     // Read TTree:
     TTree* tree  = (TTree*) t_file -> Get("T");
@@ -122,13 +137,14 @@ void event_topology() {
         }
 
         if (out_prints) {
-            cout << "tryydoyhhmmss" << "," << ievt << ","  << midas.id << "," << midas.p_id << "," << saetad.chi_2 << "," << hitspp.T1 << "," << hitspp.T3 << "," << hitspp.T4 << endl;
+            cout << filename_id << "," << ievt << ","  << midas.id << "," << midas.p_id << "," << saetad.chi_2 << "," << hitspp.T1 << "," << hitspp.T3 << "," << hitspp.T4 << endl;
         }
 
         if (midas.id == 13) nmuons++;
         nevt_passed++;
     }
 
+    // Stats at END:
     cout << "Number of events passed: " << nevt_passed << ", muons: " << nmuons << endl;
 }
 
