@@ -18,9 +18,8 @@
 
 
 // File constants and structs
-
-Event** event;  // Event class 
-TRpcHit** rpc_hit;  // Hit class
+Event** event;          // Event class 
+TRpcHit** rpc_hit;      // Hit class
 TRpcSaeta** rpc_saeta;  // Saeta class
 
 list<int>::iterator it;
@@ -28,49 +27,36 @@ Int_t weighted_mult;
 
 
 void event_topology() {
+    string root_full_path = "/home/mcruces/Documents/fptrucha_hits/root/tr20263112419.hld.root.root"; 
 
-    // Date Constants:
-    string yy = "20";
-    string doy = "270";
-    string yydoy = yy + doy;
-
-    // Filenames:
-    // --> Bad cells
-    string bc_filename = "bad_cells_" + yydoy + ".csv";
-    // --> Root file
-    string root_filename = "tr20263112419.hld.root.root";
-
-    // Loop variables:
-    Int_t nhits, nsaetas;
-
-    // Full Paths:
-    // --> Bad cells
-    string bc_fulll_path = c_bc_dir + bc_filename;
-    // --> Root file
-    string root_full_path = c_root_dir + root_filename;
-
-
-    //--  Read Bad Cells  ------------------------------------------
-
-    ReturnBC bad_cells = read_bad_cells(bc_fulll_path);
-    if (silly_prints) cout << "Bad cells of 20270: " << bad_cells.T1[0] << endl;
-
-    //--  Read TFile  ----------------------------------------------
-
-    // (It needs a char as input)
+    // ROOT Full Input Path as Char array
     int path_len = root_full_path.length();
     char root_char_path[path_len + 1];
     strcpy(root_char_path, root_full_path.c_str());
 
-    TFile* t_file = new TFile(root_char_path, "READ");
-
-    // Take filename_id
+    // ROOT Filename ID
     char *file0 = basename(root_char_path);
     string root_full_name = file0;
     string filename_id = root_full_name.substr(2,11);
-
-    // Read TTree:
+    
+    // Date ID
+    string yydoy = filename_id.substr(0, 5);
+    
+    // Bad cells Filename
+    string bc_filename = "bad_cells_" + yydoy + ".csv";
+    
+    //--  Read TTree  -----------------------------------------------
+    TFile* t_file = new TFile(root_char_path, "READ");
     TTree* tree  = (TTree*) t_file -> Get("T");
+
+    //--  Read Bad Cells  -------------------------------------------
+
+    string bc_fulll_path = c_bc_dir + bc_filename;
+    ReturnBC bad_cells = read_bad_cells(bc_fulll_path);
+    if (silly_prints) cout << "Bad cells of 20270: " << bad_cells.T1[0] << endl;
+
+    // Loop variables:
+    Int_t nhits, nsaetas;
 
     //--  Reading TClonesArrays -------------------------------------
 
@@ -82,11 +68,11 @@ void event_topology() {
     //   5.- Declared instance of TRpcHit class (I'll use it later)
 
     //----  Hits
-    TClonesArray* hits_carray;                                       // 1.
-    hits_carray = new TClonesArray("TRpcHit");                       // 2.
-    TBranch *branch_rpchit = tree -> GetBranch("rpchit");            // 3.
-    branch_rpchit -> SetAddress(&hits_carray);                       // 4.
-    TRpcHit** rpc_hit;                                               // 5.
+    TClonesArray* hits_carray;                                        // 1.
+    hits_carray = new TClonesArray("TRpcHit");                        // 2.
+    TBranch *branch_rpchit = tree -> GetBranch("rpchit");             // 3.
+    branch_rpchit -> SetAddress(&hits_carray);                        // 4.
+    TRpcHit** rpc_hit;                                                // 5.
 
     //----  Saetas
     TClonesArray* saetas_carray;                                      // 1.
@@ -95,7 +81,7 @@ void event_topology() {
     branch_rpcsaeta -> SetAddress(&saetas_carray);                    // 4.
     TRpcSaeta** rpc_saeta;                                            // 5.
 
-    //----------------------------------------------------------------
+    //---------------------------------------------------------------
 
     Long64_t nevents = tree->GetEntries();
     if (silly_prints) cout << "Number of events: " << nevents << c_constant << endl;
@@ -149,3 +135,8 @@ void event_topology() {
 }
 
 
+// int main() {
+//     string filename = "/home/mcruces/Documents/fptrucha_hits/root/tr20263112419.hld.root.root";
+//     event_topology(filename);
+//     return 0;
+// }
