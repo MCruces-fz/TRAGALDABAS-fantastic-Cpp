@@ -5,13 +5,17 @@ FROMDATE=$2
 TODATE=$3
 
 # HLDDIR="/home/mcruces/Documents/fptrucha_hits/root/"
-HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
-OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+HLDDIR="/home/mcruces/Documents/fptrucha_hits/test01/"
+# HLDDIR="/media/Datos2TB/tragaldabas/data/done/"
+# OUTDIR="/media/Datos4TB/people/mcruces/ICRCDST/unpacked/"
+OUTDIR="/home/mcruces/Documents/fptrucha_hits/test01/"
 # OUTDIR="/media/Datos4TB/people/mcruces/TEST/unpacked/"
-LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
+# LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_corr_20180423.txt"
+LUPTAB="../luptabs/luptable_20201013.txt"
 # LUPTAB="/media/Datos2TB/tragaldabas/luptab/luptable_20201013.txt"
 # PARSDIR="/media/Datos2TB/mcruces/tragaldabas/2020DST/pars/2020_day_092_CalPars.txt" # Mine
-PARSDIR="/media/Datos2TB/damian/tragaldabas/2020DST/pars/" # Damian
+# PARSDIR="/media/Datos2TB/damian/tragaldabas/2020DST/pars/" # Damian
+PARSDIR="../CalPars/"
 # PARSDIR="/media/Datos2TB/damian/tragaldabas/2021DST/pars/" # Damian
 
 function show_help() {
@@ -29,8 +33,8 @@ function do_unpack() {
     FILENAME=$1
     YY=${FILENAME:2:2}
     DOY=${FILENAME:4:3}
-    # YY=21
-    # DOY=068
+    YY=20
+    DOY=092
     
     echo Analyzing file: $FILENAME
     
